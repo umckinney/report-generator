@@ -1,0 +1,12 @@
+# Core dependencies
+pandas==2.2.0
+pyyaml==6.0.2
+jinja2==3.1.4
+
+# Testing
+pytest==8.3.4
+pytest-cov==6.0.0
+
+# Code quality
+black==24.10.0
+isort==5.13.2
