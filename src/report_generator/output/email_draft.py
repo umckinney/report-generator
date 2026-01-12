@@ -9,10 +9,9 @@ import subprocess
 import sys
 import tempfile
 import webbrowser
-from typing import Optional
-
-from email.message import EmailMessage
 from email import policy
+from email.message import EmailMessage
+from typing import Optional
 
 
 class EmailDraftHandler:  # pylint: disable=too-few-public-methods
@@ -64,9 +63,7 @@ class EmailDraftHandler:  # pylint: disable=too-few-public-methods
 
         if self.platform == "darwin":
             # Use .eml draft approach on macOS
-            return self._open_eml_draft(
-                html_content, subject, to_addresses, cc_addresses
-            )
+            return self._open_eml_draft(html_content, subject, to_addresses, cc_addresses)
         # Fallback: save HTML and open in browser
         print(f"⚠ Email draft not supported on {self.platform}")
         print("Opening HTML in browser instead...")
@@ -107,9 +104,7 @@ class EmailDraftHandler:  # pylint: disable=too-few-public-methods
             msg.add_alternative(html_content, subtype="html")
 
             # Save as temporary .eml file
-            with tempfile.NamedTemporaryFile(
-                mode="wb", suffix=".eml", delete=False
-            ) as f:
+            with tempfile.NamedTemporaryFile(mode="wb", suffix=".eml", delete=False) as f:
                 f.write(msg.as_bytes())
                 temp_path = f.name
 

@@ -6,11 +6,12 @@ different reports. Report-specific logic lives in reports config.
 """
 
 import pytest
+
 from report_generator.data.transformers import (
-    format_date,
-    split_multi_value_names,
     DataTransformer,
+    format_date,
     preserve_line_breaks,
+    split_multi_value_names,
 )
 
 

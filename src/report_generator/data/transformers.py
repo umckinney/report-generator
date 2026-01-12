@@ -8,8 +8,8 @@ Report-specific configuration (field mappings, which transformations to apply)
 should live in reports config files, not here.
 """
 
-from typing import List, Dict, Any, Optional, Callable
 from datetime import datetime
+from typing import Any, Callable, Dict, List, Optional
 
 
 def split_multi_value_names(value: Optional[str]) -> List[str]:

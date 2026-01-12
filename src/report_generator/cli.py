@@ -4,18 +4,17 @@ Command-line interface for report generator.
 Provides simple commands for generating reports.
 """
 
-import sys
 import argparse
-from pathlib import Path
-from datetime import datetime
+import sys
 from argparse import Namespace
+from datetime import datetime
+from pathlib import Path
+
+from report_generator.output.email_draft import EmailDraftHandler
+from report_generator.reports.example_report.config import EMAIL_CONFIG as KPR_EMAIL_CONFIG
 
 # Import report generators
 from report_generator.reports.example_report.generator import KPRReportGenerator
-from report_generator.reports.example_report.config import (
-    EMAIL_CONFIG as KPR_EMAIL_CONFIG,
-)
-from report_generator.output.email_draft import EmailDraftHandler
 
 # Registry of available reports
 REPORT_REGISTRY = {
@@ -152,9 +151,7 @@ def interactive_mode():
         input("Press Enter to close...")
         return 1
 
-    args = Namespace(
-        report_type="kpr", csv=csv_path, output=None, email=True  # Always open email
-    )
+    args = Namespace(report_type="kpr", csv=csv_path, output=None, email=True)  # Always open email
 
     result = generate_report(args)
 
@@ -194,9 +191,7 @@ Examples:
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
     # Generate report command
-    generate_parser = subparsers.add_parser(
-        "generate", help="Generate a report from CSV or TSV"
-    )
+    generate_parser = subparsers.add_parser("generate", help="Generate a report from CSV or TSV")
     generate_parser.add_argument(
         "--report",
         dest="report_type",
@@ -204,9 +199,7 @@ Examples:
         choices=list(REPORT_REGISTRY.keys()),
         help="Type of report to generate",
     )
-    generate_parser.add_argument(
-        "--csv", required=True, help="Path to CSV or TSV export file"
-    )
+    generate_parser.add_argument("--csv", required=True, help="Path to CSV or TSV export file")
     generate_parser.add_argument(
         "--output",
         help="Path for output HTML file (default: outputs/{report}_report_YYYY-MM-DD.html)",

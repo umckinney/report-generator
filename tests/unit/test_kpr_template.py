@@ -7,9 +7,11 @@ renders correctly with context data.
 This is KPR-specific. Other reports will have their own template tests.
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
 from jinja2 import Environment, FileSystemLoader
+
 from report_generator.reports.example_report.builder import KPRReportBuilder
 
 

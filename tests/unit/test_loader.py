@@ -5,8 +5,10 @@ Tests the loading and basic validation of CSV files containing
 reports data.
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from report_generator.data.loader import TabularDataLoader
 
 
@@ -122,9 +124,7 @@ class TestTabularDataLoader:
         # Create CSV with BOM (byte order mark)
         # UTF-8 BOM is \ufeff - it should be invisible when loaded correctly
         bom_csv = Path("tests/fixtures/bom.csv")
-        bom_csv.write_text(
-            "\ufeffName,Age,City\nAlice,30,NYC\nBob,25,LA", encoding="utf-8-sig"
-        )
+        bom_csv.write_text("\ufeffName,Age,City\nAlice,30,NYC\nBob,25,LA", encoding="utf-8-sig")
 
         loader = TabularDataLoader()
         data = loader.load(bom_csv)
@@ -205,6 +205,7 @@ class TestTabularDataLoader:
         Should raise ValueError when pandas can't parse the file.
         """
         from unittest.mock import patch
+
         import pandas as pd
 
         # Create a normal CSV file
@@ -214,9 +215,7 @@ class TestTabularDataLoader:
         loader = TabularDataLoader()
 
         # Mock pandas.read_csv to raise ParserError
-        with patch(
-            "pandas.read_csv", side_effect=pd.errors.ParserError("Test parser error")
-        ):
+        with patch("pandas.read_csv", side_effect=pd.errors.ParserError("Test parser error")):
             with pytest.raises(ValueError) as exc_info:
                 loader.load(parser_error_csv)
 

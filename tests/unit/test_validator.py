@@ -8,6 +8,7 @@ Philosophy: Trust the data source. Report what exists.
 """
 
 import pytest
+
 from report_generator.data.validator import DataValidator
 
 
@@ -28,9 +29,7 @@ class TestDataValidator:
             }
         ]
 
-        schema = {
-            "expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]
-        }
+        schema = {"expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]}
 
         validator = DataValidator()
         result = validator.validate(valid_data, schema)
@@ -52,9 +51,7 @@ class TestDataValidator:
             }
         ]
 
-        schema = {
-            "expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]
-        }
+        schema = {"expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]}
 
         validator = DataValidator()
         result = validator.validate(data, schema)
@@ -110,9 +107,7 @@ class TestDataValidator:
             }
         ]
 
-        schema = {
-            "expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]
-        }
+        schema = {"expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]}
 
         validator = DataValidator()
         result = validator.validate(data, schema)
@@ -136,9 +131,7 @@ class TestDataValidator:
             }
         ]
 
-        schema = {
-            "expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]
-        }
+        schema = {"expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]}
 
         validator = DataValidator()
         result = validator.validate(data, schema)
@@ -190,9 +183,7 @@ class TestDataValidator:
             }
         ]
 
-        schema = {
-            "expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]
-        }
+        schema = {"expected_columns": ["L4 Deliverables", "Deliverable Status", "L4 Priority"]}
 
         validator = DataValidator()
         result = validator.validate(data, schema)

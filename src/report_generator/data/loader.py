@@ -8,6 +8,7 @@ Supports both comma-separated (CSV) and tab-separated (TSV) files.
 """
 
 from pathlib import Path
+
 import pandas as pd
 
 
@@ -57,8 +58,7 @@ class TabularDataLoader:  # pylint: disable=too-few-public-methods
         # Check file exists
         if not filepath.exists():
             raise FileNotFoundError(
-                f"CSV file not found: {filepath}\n"
-                f"Please check the file path and try again."
+                f"CSV file not found: {filepath}\n" f"Please check the file path and try again."
             )
 
         # Validate file extension
@@ -96,9 +96,7 @@ class TabularDataLoader:  # pylint: disable=too-few-public-methods
                 "and has consistent columns."
             ) from exc
         except Exception as exc:
-            raise ValueError(
-                f"Error reading file: {filepath}\nError: {exc}"
-            ) from exc
+            raise ValueError(f"Error reading file: {filepath}\nError: {exc}") from exc
 
         # Check if DataFrame is empty
         if df.empty:

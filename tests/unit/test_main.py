@@ -4,9 +4,10 @@ Unit tests for __main__ module.
 Tests the entry point for running the package as a module.
 """
 
-import pytest
 import runpy
 from unittest.mock import patch
+
+import pytest
 
 
 class TestMainModule:
@@ -52,9 +53,7 @@ class TestMainModule:
 
         # Mock sys.argv to have only the program name (triggers interactive mode)
         # and mock interactive_mode to return success
-        with patch(
-            "report_generator.cli.interactive_mode", return_value=0
-        ) as mock_interactive:
+        with patch("report_generator.cli.interactive_mode", return_value=0) as mock_interactive:
             with patch("sys.argv", ["report_generator"]):
                 # Re-import to get fresh reference with mocked sys.argv
                 import report_generator.cli as cli_module

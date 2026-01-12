@@ -8,6 +8,7 @@ This is KPR-specific logic. Other reports will have their own builders.
 """
 
 import pytest
+
 from report_generator.reports.example_report.builder import KPRReportBuilder
 
 

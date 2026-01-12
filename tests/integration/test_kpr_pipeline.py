@@ -4,17 +4,19 @@ Integration test for Key Priorities reports pipeline.
 Tests the full data flow: Load → Validate → Transform → Ready for template
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from report_generator.data.loader import TabularDataLoader
-from report_generator.data.validator import DataValidator
 from report_generator.data.transformers import DataTransformer
-from report_generator.reports.example_report.config import (
-    get_transformer_config,
-    clean_transformed_row,
-    EXPECTED_COLUMNS,
-)
+from report_generator.data.validator import DataValidator
 from report_generator.reports.example_report.builder import KPRReportBuilder
+from report_generator.reports.example_report.config import (
+    EXPECTED_COLUMNS,
+    clean_transformed_row,
+    get_transformer_config,
+)
 
 
 class TestKPRPipeline:
@@ -67,9 +69,7 @@ class TestKPRPipeline:
         # Check date was formatted
         # Mock data has "12/15/2024" which should become "Dec 15, 2024"
         if first_row["delivery_date"]:
-            assert (
-                "Dec" in first_row["delivery_date"] or first_row["delivery_date"] == ""
-            )
+            assert "Dec" in first_row["delivery_date"] or first_row["delivery_date"] == ""
 
     def test_pipeline_handles_empty_leads(self):
         """
@@ -182,9 +182,7 @@ class TestKPRPipeline:
 
         # Verify content is in HTML - use actual deliverable names from mock data
         assert "Weekly Key Priorities Report" in html
-        assert (
-            "API Gateway" in html or "Analytics Dashboard" in html
-        )  # Part of deliverable names
+        assert "API Gateway" in html or "Analytics Dashboard" in html  # Part of deliverable names
         assert "On Track" in html or "At Risk" in html
 
         # Verify a person name appears
@@ -222,7 +220,8 @@ class TestKPRPipeline:
 
         Should generate report with empty logo_base64.
         """
-        from unittest.mock import patch, MagicMock
+        from unittest.mock import MagicMock, patch
+
         from report_generator.reports.example_report.generator import KPRReportGenerator
 
         # Mock Path.exists to return False for logo
@@ -243,8 +242,9 @@ class TestKPRPipeline:
 
         Should raise ValueError when data is invalid.
         """
+        from unittest.mock import MagicMock, patch
+
         from report_generator.reports.example_report.generator import KPRReportGenerator
-        from unittest.mock import patch, MagicMock
 
         # Create a valid CSV that will load successfully
         valid_csv = Path("tests/fixtures/valid_for_validation_test.csv")
@@ -282,8 +282,9 @@ class TestKPRPipeline:
 
         Should print warnings but complete successfully.
         """
-        from report_generator.reports.example_report.generator import KPRReportGenerator
         from unittest.mock import patch
+
+        from report_generator.reports.example_report.generator import KPRReportGenerator
 
         # Create CSV with valid data
         warning_csv = Path("tests/fixtures/warning_test.csv")

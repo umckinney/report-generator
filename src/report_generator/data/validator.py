@@ -8,7 +8,7 @@ Philosophy: Trust the data source. Report what exists.
 The validator checks structure only - templates handle missing/incomplete data.
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 class DataValidator:  # pylint: disable=too-few-public-methods
@@ -77,8 +77,7 @@ class DataValidator:  # pylint: disable=too-few-public-methods
         if not data or len(data) == 0:
             result["valid"] = False
             result["errors"].append(
-                "No data to validate. "
-                "The data list is empty - cannot generate reports."
+                "No data to validate. " "The data list is empty - cannot generate reports."
             )
             return result
 
@@ -87,8 +86,7 @@ class DataValidator:  # pylint: disable=too-few-public-methods
         if not first_row or len(first_row) == 0:
             result["valid"] = False
             result["errors"].append(
-                "Data has no columns. "
-                "The data structure is broken - cannot generate reports."
+                "Data has no columns. " "The data structure is broken - cannot generate reports."
             )
             return result
 
@@ -110,9 +108,7 @@ class DataValidator:  # pylint: disable=too-few-public-methods
         unexpected_columns = actual_columns - expected_columns
         if unexpected_columns and expected_columns:  # Only if we have expectations
             unexpected_list = ", ".join(sorted(unexpected_columns))
-            result["info"].append(
-                f"Found unexpected columns (will be ignored): {unexpected_list}"
-            )
+            result["info"].append(f"Found unexpected columns (will be ignored): {unexpected_list}")
 
         # Check data consistency across rows (optional - informational)
         if len(data) > 1:
@@ -122,9 +118,7 @@ class DataValidator:  # pylint: disable=too-few-public-methods
                     f"Some rows have inconsistent columns. "
                     f"Rows with issues: {', '.join(map(str, inconsistent_rows))}"
                 )
-                result["info"].append(
-                    "This may indicate data quality issues in the source."
-                )
+                result["info"].append("This may indicate data quality issues in the source.")
 
         return result
 

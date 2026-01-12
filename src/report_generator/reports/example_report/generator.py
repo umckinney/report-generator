@@ -12,14 +12,14 @@ from typing import Optional
 from jinja2 import Environment, FileSystemLoader
 
 from report_generator.data.loader import TabularDataLoader
-from report_generator.data.validator import DataValidator
 from report_generator.data.transformers import DataTransformer
-from report_generator.reports.example_report.config import (
-    get_transformer_config,
-    clean_transformed_row,
-    EXPECTED_COLUMNS,
-)
+from report_generator.data.validator import DataValidator
 from report_generator.reports.example_report.builder import KPRReportBuilder
+from report_generator.reports.example_report.config import (
+    EXPECTED_COLUMNS,
+    clean_transformed_row,
+    get_transformer_config,
+)
 
 
 class KPRReportGenerator:
@@ -55,9 +55,7 @@ class KPRReportGenerator:
         else:
             self.logo_base64 = ""  # No logo if file missing
 
-    def generate(
-        self, csv_path: str | Path, output_path: Optional[str | Path] = None
-    ) -> str:
+    def generate(self, csv_path: str | Path, output_path: Optional[str | Path] = None) -> str:
         """
         Generate KPR report from CSV file.
 
@@ -96,9 +94,7 @@ class KPRReportGenerator:
         validation_result = self.validator.validate(raw_data, schema)
 
         if not validation_result["valid"]:
-            raise ValueError(
-                "Data validation failed:\n" + "\n".join(validation_result["errors"])
-            )
+            raise ValueError("Data validation failed:\n" + "\n".join(validation_result["errors"]))
 
         # Show warnings if any
         if validation_result["warnings"]:

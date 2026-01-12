@@ -4,8 +4,10 @@ Unit tests for email draft handler.
 Tests the email draft functionality (without actually opening mail client).
 """
 
+from unittest.mock import MagicMock, mock_open, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, mock_open
+
 from report_generator.output.email_draft import EmailDraftHandler
 
 
@@ -58,9 +60,7 @@ class TestOpenDraft:
         handler = EmailDraftHandler()
         handler.platform = "linux"
 
-        result = handler.open_draft(
-            html_content="<h1>Test</h1>", subject="Test Subject"
-        )
+        result = handler.open_draft(html_content="<h1>Test</h1>", subject="Test Subject")
 
         assert result is True
         mock_browser.assert_called_once_with("<h1>Test</h1>")
@@ -84,9 +84,7 @@ class TestOpenDraft:
         handler.platform = "darwin"
 
         with patch.object(handler, "_open_eml_draft", return_value=True) as mock_eml:
-            handler.open_draft(
-                html_content="<h1>Test</h1>", to_addresses=None, cc_addresses=None
-            )
+            handler.open_draft(html_content="<h1>Test</h1>", to_addresses=None, cc_addresses=None)
 
             # Verify empty lists were passed
             call_args = mock_eml.call_args
@@ -269,9 +267,7 @@ class TestOpenEmlDraft:
 
     @patch("report_generator.output.email_draft.EmailDraftHandler._open_in_browser")
     @patch("tempfile.NamedTemporaryFile")
-    def test_eml_draft_falls_back_to_browser_on_exception(
-        self, mock_tempfile, mock_browser
-    ):
+    def test_eml_draft_falls_back_to_browser_on_exception(self, mock_tempfile, mock_browser):
         """Test that EML draft falls back to browser on exception."""
         mock_tempfile.side_effect = Exception("Failed to create temp file")
         mock_browser.return_value = True
@@ -289,9 +285,7 @@ class TestOpenEmlDraft:
 
     @patch("report_generator.output.email_draft.EmailDraftHandler._open_in_browser")
     @patch("tempfile.NamedTemporaryFile")
-    def test_eml_draft_returns_browser_result_on_exception(
-        self, mock_tempfile, mock_browser
-    ):
+    def test_eml_draft_returns_browser_result_on_exception(self, mock_tempfile, mock_browser):
         """Test that EML draft returns browser result when falling back."""
         mock_tempfile.side_effect = Exception("Failed")
         mock_browser.return_value = False  # Browser also fails
@@ -354,9 +348,7 @@ class TestOpenInBrowser:
 
     @patch("webbrowser.open")
     @patch("tempfile.NamedTemporaryFile")
-    def test_browser_returns_false_on_webbrowser_exception(
-        self, mock_tempfile, mock_browser
-    ):
+    def test_browser_returns_false_on_webbrowser_exception(self, mock_tempfile, mock_browser):
         """Test that browser returns False when webbrowser.open fails."""
         mock_file = MagicMock()
         mock_file.name = "/tmp/test.html"

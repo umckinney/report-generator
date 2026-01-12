@@ -6,14 +6,15 @@ for template rendering. This is KPR-specific logic - other reports
 will have their own builders with different grouping/sorting needs.
 """
 
-from typing import List, Dict, Any, Tuple
 from datetime import datetime
+from typing import Any, Dict, List, Tuple
+
 from report_generator.reports.example_report.config import (
-    STATUS_CONFIG,
-    PRIORITY_STYLES,
     BRAND_COLORS,
     EMPTY_STATES,
+    PRIORITY_STYLES,
     ROLE_DISPLAY_ORDER,
+    STATUS_CONFIG,
 )
 
 

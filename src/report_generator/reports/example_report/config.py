@@ -10,8 +10,8 @@ This module contains all reports-specific configuration including:
 
 from report_generator.data.transformers import (
     format_date,
-    split_multi_value_names,
     preserve_line_breaks,
+    split_multi_value_names,
 )
 
 # ============================================================================

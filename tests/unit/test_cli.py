@@ -4,18 +4,14 @@ Unit tests for CLI module.
 Tests command-line interface functionality.
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
-from pathlib import Path
-from argparse import Namespace
 import sys
+from argparse import Namespace
+from pathlib import Path
+from unittest.mock import MagicMock, patch
 
-from report_generator.cli import (
-    main,
-    generate_report,
-    interactive_mode,
-    REPORT_REGISTRY,
-)
+import pytest
+
+from report_generator.cli import REPORT_REGISTRY, generate_report, interactive_mode, main
 
 
 class TestReportRegistry:
@@ -38,9 +34,7 @@ class TestGenerateReport:
 
     def test_generate_unknown_report_type(self):
         """Test error handling for unknown report type."""
-        args = Namespace(
-            report_type="unknown_report", csv="test.csv", output=None, email=False
-        )
+        args = Namespace(report_type="unknown_report", csv="test.csv", output=None, email=False)
 
         result = generate_report(args)
 
@@ -91,9 +85,7 @@ class TestGenerateReport:
         )
         output_path = tmp_path / "output.html"
 
-        args = Namespace(
-            report_type="kpr", csv=str(csv_path), output=str(output_path), email=False
-        )
+        args = Namespace(report_type="kpr", csv=str(csv_path), output=str(output_path), email=False)
 
         result = generate_report(args)
 
