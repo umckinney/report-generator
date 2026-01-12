@@ -20,11 +20,16 @@ The **Chief of Staff (CoS) Agent** augments human judgment by consolidating frag
 
 ## Project Status
 
-**Current State**: Foundation layer complete (data ingestion, validation, transformation, templating)
+**Current State**: Phase 2 Complete - AI-powered executive summaries now available! ✨
 
-**In Progress**: LLM reasoning layer integration (see [LLM_REASONING_PLAN.md](docs/LLM_REASONING_PLAN.md))
+**Latest Features:**
+- ✅ LLM-powered executive summary generation
+- ✅ Multi-provider support (Anthropic Claude, ready for OpenAI)
+- ✅ Beautiful visual integration with AI badges
+- ✅ Feature flag system for opt-in AI features
+- ✅ Comprehensive testing (162 tests, 95% coverage)
 
-The system currently operates as a deterministic report generator. The reasoning layer is being added incrementally to enable intelligent synthesis while preserving the reliable data pipeline.
+The system includes both deterministic report generation and optional AI-powered synthesis for intelligent insights.
 
 ## Quick Start
 
@@ -45,27 +50,86 @@ pip install -e .
 
 ### Basic Usage
 
+**Without AI (traditional report generation):**
 ```bash
 # Generate a report from CSV
 report-generator generate --report kpr --csv data.csv
 
 # Generate and open as email draft (macOS)
 report-generator generate --report kpr --csv data.csv --email
+```
 
+**With AI-Powered Executive Summaries:**
+```bash
+# Set your Anthropic API key
+export ANTHROPIC_API_KEY="your-key-here"
+
+# Enable AI reasoning
+export ENABLE_REASONING=true
+
+# Generate report with AI insights
+report-generator generate --report kpr --csv data.csv
+
+# Or run the demo
+python demo_executive_summary.py
+```
+
+**Other commands:**
+```bash
 # List available report types
 report-generator list-reports
+
+# Run as a module
+python -m report_generator generate --report kpr --csv data.csv
 ```
 
-Or run as a module:
+## AI Features 🤖
+
+### Executive Summary Generation
+
+The Chief of Staff Agent can automatically generate intelligent executive summaries of your reports using LLM reasoning.
+
+**What it does:**
+- Analyzes status breakdown across all deliverables
+- Identifies critical items requiring attention (Off Track, At Risk)
+- Extracts themes from risks and issues
+- Generates a 2-3 sentence executive summary
+- Displays prominently at the top of reports with "AI-Generated" badge
+
+**Example output:**
+> "Program shows mixed health with 1 off-track and 1 at-risk deliverable requiring immediate attention. The API Gateway Upgrade is off track but progressing on alignment, while the Data Retention Process is at risk due to current processing hold. The Real-time Fraud Detection system successfully launched, providing a positive completion milestone."
+
+**Configuration:**
 ```bash
-python -m report_generator generate --report kpr --csv data.csv --email
+# Required: Set API key
+export ANTHROPIC_API_KEY="your-key-here"
+
+# Enable reasoning (default: false)
+export ENABLE_REASONING=true
+
+# Optional: Configure model and parameters
+export REASONING_PROVIDER=anthropic  # default
+export REASONING_MAX_TOKENS=2048     # default
+export REASONING_TEMPERATURE=0.0     # default (deterministic)
 ```
+
+**Cost:** ~$0.01-0.03 per report (very affordable with Claude Sonnet 4.5)
+
+**Privacy:** Your data is sent to Anthropic's API for processing. See [Anthropic's privacy policy](https://www.anthropic.com/privacy) for details.
+
+### Coming Soon
+
+- **Risk & Theme Analysis**: Cross-cutting themes across deliverables
+- **Multi-Audience Support**: Generate executive, technical, and partner views
+- **Action Item Recommendations**: AI-suggested next steps
+- **Historical Trend Analysis**: Week-over-week change detection
 
 ## Development
 
 ### Prerequisites
 - Python 3.10+
 - macOS (for email integration) or Linux
+- Anthropic API key (optional, for AI features)
 
 ### Setup
 
@@ -115,13 +179,19 @@ pylint src/report_generator --fail-under=9.0
 ## Project Structure
 
 ```
-report-generator/
+chief-of-staff-agent/
 ├── src/report_generator/
 │   ├── cli.py                    # Command-line interface
 │   ├── data/                     # Data loading & transformation
 │   │   ├── loader.py             # CSV/TSV file loading
 │   │   ├── transformers.py       # Data transformation utilities
 │   │   └── validator.py          # Data validation
+│   ├── reasoning/                # 🆕 AI reasoning layer
+│   │   ├── provider.py           # LLM provider interface & implementations
+│   │   ├── config.py             # Feature flags and configuration
+│   │   ├── synthesizer.py        # Report synthesis orchestration
+│   │   └── prompts/              # Prompt engineering templates
+│   │       └── executive_summary.py
 │   ├── output/                   # Output handling
 │   │   └── email_draft.py        # Email draft generation
 │   └── reports/
@@ -129,13 +199,16 @@ report-generator/
 │           ├── builder.py        # Report structure builder
 │           ├── config.py         # Configuration & mappings
 │           ├── generator.py      # Main generator orchestration
-│           ├── template.html     # HTML email template
+│           ├── template.html     # HTML email template (AI-enhanced)
 │           └── assets/           # Logo and images
 ├── tests/
-│   ├── unit/                     # Unit tests
+│   ├── unit/                     # Unit tests (162 tests)
 │   ├── integration/              # Integration tests
 │   └── fixtures/                 # Test data
 ├── docs/                         # Documentation
+│   ├── LLM_REASONING_PLAN.md     # 🆕 AI implementation plan
+│   └── CHIEF_OF_STAFF_OVERVIEW.md # 🆕 Project vision
+├── demo_executive_summary.py     # 🆕 Live demo script
 └── outputs/                      # Generated reports (gitignored)
 ```
 
@@ -175,6 +248,27 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed instructions.
 
 ## Troubleshooting
 
+### AI Features
+
+**Executive summary not appearing:**
+- Ensure `ENABLE_REASONING=true` is set
+- Verify `ANTHROPIC_API_KEY` is set correctly
+- Check console output for reasoning layer status
+- Summary only appears if reasoning succeeds (graceful degradation)
+
+**API errors:**
+- Verify API key is valid: `echo $ANTHROPIC_API_KEY`
+- Check account has credits remaining
+- Review rate limits (shouldn't be an issue for typical use)
+- Check firewall/proxy settings
+
+**Cost concerns:**
+- Each report costs ~$0.01-0.03 with Claude Sonnet 4.5
+- Token usage is logged in console output
+- Disable with `unset ENABLE_REASONING` anytime
+
+### General Issues
+
 ### Email draft not opening (macOS)
 - Ensure Mail.app is configured with an email account
 - Grant automation permissions: System Settings → Privacy & Security → Automation
@@ -198,7 +292,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Tech Stack
 
+### Core
 - **Python 3.10+**: Core language
-- **pandas**: CSV processing
-- **Jinja2**: HTML templating
-- **pytest**: Testing framework
+- **pandas**: CSV processing & data manipulation
+- **Jinja2**: HTML templating engine
+- **pytest**: Testing framework (162 tests, 95% coverage)
+
+### AI Features (Optional)
+- **Anthropic Claude API**: LLM reasoning (Sonnet 4.5)
+- **Multi-provider architecture**: Ready for OpenAI, local models, etc.
+- **Prompt engineering**: Structured templates for consistent outputs
+- **Token tracking**: Built-in usage monitoring
