@@ -1,22 +1,30 @@
-# Report Generator
+# Chief of Staff Agent
 
 [![CI](https://github.com/umckinney/report-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/umckinney/report-generator/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-A flexible report generator for creating weekly status reports from CSV data.
+An intelligent coordination and synthesis system that transforms structured program data into coherent narratives, decision-ready summaries, and actionable insights for leaders and program owners.
 
 ## Overview
 
-This tool generates formatted HTML reports from CSV exports (e.g., from Airtable, spreadsheets, or other data sources) and opens them as email drafts in your mail client, ready to send to stakeholders.
+The **Chief of Staff (CoS) Agent** augments human judgment by consolidating fragmented inputs from CSV/TSV exports into unified, intelligent reports tailored for different audiences. It reduces coordination overhead, surfaces meaningful signals, and proposes concrete next steps—all while remaining transparent, auditable, and human-reviewed.
 
-**Key Features:**
-- Generates beautiful HTML reports from CSV data
-- Opens pre-filled email drafts (macOS Mail integration)
-- Customizable branding and styling
-- Data validation and transformation
-- Extensible architecture for multiple report types
+**Core Capabilities:**
+- **Intelligent Synthesis**: LLM-powered reasoning extracts themes, risks, and insights from structured data
+- **Multi-Audience Support**: Generate executive summaries, technical deep-dives, and partner-safe updates from the same source
+- **Action-Oriented**: Proposes follow-up actions, ownership gaps, and draft artifacts for review
+- **Trustworthy & Testable**: Built with TDD, explicit inputs, deterministic transformations, and transparent uncertainty handling
+- **Extensible Architecture**: Support technical programs, operational reviews, or any cross-functional initiative by swapping report definitions
+
+## Project Status
+
+**Current State**: Foundation layer complete (data ingestion, validation, transformation, templating)
+
+**In Progress**: LLM reasoning layer integration (see [LLM_REASONING_PLAN.md](docs/LLM_REASONING_PLAN.md))
+
+The system currently operates as a deterministic report generator. The reasoning layer is being added incrementally to enable intelligent synthesis while preserving the reliable data pipeline.
 
 ## Quick Start
 

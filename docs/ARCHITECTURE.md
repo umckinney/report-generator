@@ -1,7 +1,7 @@
-# Report Generator - Architecture Documentation
+# Chief of Staff Agent - Architecture Documentation
 
-**Version 1.0.0**  
-**Last Updated:** 29 December 2025  
+**Version 2.0.0**
+**Last Updated:** 12 January 2026
 **Audience:** Developers and maintainers
 
 ---
@@ -9,15 +9,16 @@
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [System Architecture](#system-architecture)
-3. [Project Structure](#project-structure)
-4. [Core Components](#core-components)
-5. [Data Flow](#data-flow)
-6. [Adding New Reports](#adding-new-reports)
-7. [Configuration Management](#configuration-management)
-8. [Testing Strategy](#testing-strategy)
-9. [Packaging & Distribution](#packaging--distribution)
-10. [Maintenance Guide](#maintenance-guide)
+2. [Evolution to Chief of Staff Agent](#evolution-to-chief-of-staff-agent)
+3. [System Architecture](#system-architecture)
+4. [Project Structure](#project-structure)
+5. [Core Components](#core-components)
+6. [Data Flow](#data-flow)
+7. [Adding New Reports](#adding-new-reports)
+8. [Configuration Management](#configuration-management)
+9. [Testing Strategy](#testing-strategy)
+10. [Packaging & Distribution](#packaging--distribution)
+11. [Maintenance Guide](#maintenance-guide)
 
 ---
 
@@ -25,13 +26,15 @@
 
 ### Design Philosophy
 
-The KPR Report Generator follows these key principles:
+The Chief of Staff Agent follows these key principles:
 
-1. **Separation of Concerns**: Data processing, business logic, and presentation are cleanly separated
-2. **Configuration-Driven**: Report-specific logic lives in configuration files, not hardcoded
-3. **Test-Driven**: 59 tests with 93% coverage on core components
-4. **Extensible**: New report types can be added without modifying core infrastructure
-5. **Maintainable**: Built with handoff to non-engineer (TPM) in mind
+1. **Human-in-the-Loop**: The agent assists and proposes; humans decide
+2. **Separation of Concerns**: Data processing, reasoning, and presentation are cleanly separated
+3. **Configuration-Driven**: Report-specific logic lives in configuration files, not hardcoded
+4. **Test-Driven Development**: 93% coverage on core components, all new features developed with TDD
+5. **Extensible by Design**: New report types, reasoning capabilities, and outputs can be added incrementally
+6. **Transparent & Auditable**: Explicit inputs, clear separation between source data and generated insights
+7. **Deterministic Where Possible**: LLM reasoning is bounded and validated; core data pipeline remains deterministic
 
 ### Technology Stack
 
@@ -39,10 +42,49 @@ The KPR Report Generator follows these key principles:
 |-----------|-----------|---------|---------|
 | Language | Python | 3.12+ | Core application |
 | Data Processing | pandas | 2.x | CSV loading & manipulation |
+| LLM Provider | Anthropic Claude | Sonnet 4.5 | Reasoning & synthesis |
 | Templating | Jinja2 | 3.x | HTML report generation |
 | Packaging | PyInstaller | 6.x | Standalone executable |
 | Testing | pytest | 8.x | Unit & integration tests |
 | Code Quality | black, isort | Latest | Code formatting |
+
+---
+
+## Evolution to Chief of Staff Agent
+
+### From Report Generator to Intelligent Agent
+
+The system has evolved from a simple template-based report generator into an intelligent coordination agent:
+
+**Phase 1 (Complete)**: Deterministic Report Generator
+- CSV ingestion, validation, transformation
+- Template-based HTML rendering
+- Email integration
+- 93% test coverage
+
+**Phase 2 (In Progress)**: LLM Reasoning Layer
+- Executive summary generation
+- Risk & theme extraction
+- Insight synthesis
+- Multi-audience output support
+
+**Phase 3 (Planned)**: Action Intelligence
+- Action item generation
+- Ownership gap identification
+- Follow-up task drafting
+- Historical trend analysis
+
+### What Makes It a "Chief of Staff" Agent?
+
+Traditional report generators transform data into fixed templates. The Chief of Staff Agent goes further by:
+
+1. **Understanding Context**: Analyzes relationships between data points, not just formatting them
+2. **Synthesizing Insights**: Extracts themes, patterns, and anomalies across deliverables
+3. **Tailoring Communication**: Adapts messaging for executives, engineers, and external partners
+4. **Proposing Actions**: Suggests concrete next steps based on status and risks
+5. **Maintaining Trust**: Keeps humans in the loop, shows its work, handles uncertainty explicitly
+
+See [LLM_REASONING_PLAN.md](LLM_REASONING_PLAN.md) for detailed implementation plan.
 
 ---
 
