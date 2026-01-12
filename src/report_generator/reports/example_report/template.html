@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: #333333;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    .header {
+      background-color: #00338D;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+
+    .header .date {
+      margin-top: 8px;
+      font-size: 1em;
+      opacity: 0.9;
+    }
+
+    /* Summary bar with counts and links */
+    .summary {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-bottom: 3px solid #FFD100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .summary-item {
+      text-align: center;
+      min-width: 120px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .summary-item a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      padding: 8px 4px; /* better tap target */
+    }
+
+    .summary-item a:hover {
+      opacity: 0.8;
+    }
+
+    .summary-value {
+      font-size: 2em;
+      font-weight: 700;
+      color: #00338D;
+      line-height: 1;
+    }
+
+    .summary-label {
+      font-size: 0.9em;
+      color: #666666;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section {
+      padding: 30px 20px;
+    }
+
+    .intro-text {
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .intro-text p {
+      margin: 0 0 12px 0;
+    }
+
+    .intro-text a {
+      color: #00338D;
+      text-decoration: underline;
+    }
+
+    .divider {
+      border-top: 4px solid #FFD100;
+      margin: 40px 0;
+    }
+
+    .status-header {
+      color: white;
+      padding: 16px 20px;
+      margin-top: 40px;
+      margin-bottom: 24px;
+      font-size: 1.3em;
+      font-weight: bold;
+      border-radius: 4px;
+      scroll-margin-top: 20px;
+    }
+
+    .deliverable-card {
+      border: 1px solid #dddddd;
+      border-radius: 6px;
+      margin-bottom: 24px;
+      overflow: visible;
+      background-color: #ffffff;
+      display: flex;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .status-stripe {
+      width: 8px;
+      flex-shrink: 0;
+    }
+
+    .card-content {
+      flex: 1;
+    }
+
+    .deliverable-header {
+      background-color: #f8f9fa;
+      padding: 16px 20px;
+      border-bottom: 2px solid #e0e0e0;
+      display: flex;
+      /* no gap here because some email clients ignore it */
+      align-items: flex-start;
+    }
+
+    .header-left {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .priority-badge {
+      background-color: #00338D;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.9em;
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 2px;
+      margin-right: 12px; /* replaces flex gap to avoid collision */
+    }
+
+    .title-section {
+      flex: 1;
+    }
+
+    .deliverable-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #00338D;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .initiative-subtitle {
+      font-size: 0.9em;
+      color: #666666;
+      line-height: 1.4;
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      /* no gap: use margins for email safety */
+      flex-shrink: 0;
+    }
+
+    .phase-lozenge {
+      background-color: #FFD100;
+      color: #333333;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-top: 4px; /* extra tap spacing */
+    }
+
+    .phase-lozenge-default {
+      background-color: #ffffff;
+      color: #666666;
+      border: 1px solid #dddddd;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-top: 4px; /* extra tap spacing */
+    }
+
+    .no-status-lozenge {
+      background-color: #ffffff;
+      color: #666666;
+      border: 1px solid #dddddd;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
+    .due-date {
+      color: #666666;
+      font-size: 0.85em;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
+    .due-date-label {
+      color: #999999;
+      margin-right: 5px;
+    }
+
+    .deliverable-details {
+      padding: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .detail-column {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 900px) {
+      .detail-row {
+        flex-direction: column;
+      }
+
+      .detail-column {
+        width: 100%;
+      }
+
+      .detail-column + .detail-column {
+        margin-top: 16px; /* extra space between Achievements and Risks when stacked */
+      }
+
+      .header-right {
+        align-items: flex-start; /* more natural on mobile */
+      }
+    }
+
+    .detail-header {
+      font-weight: bold;
+      color: #00338D;
+      margin-bottom: 10px;
+      font-size: 0.95em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-content {
+      color: #333333;
+      line-height: 1.6;
+      font-size: 0.95em;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    /* Bullet styling inside detail sections */
+    .detail-content ul {
+      margin: 0 0 0 20px;
+      padding-left: 18px;
+      list-style-type: disc;
+    }
+
+    .detail-content ul ul {
+      margin-top: 4px;
+      margin-left: 18px;
+      list-style-type: circle; /* visually distinct sub-bullets */
+    }
+
+    .detail-content li {
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .leads-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .leads-grid {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .lead-role {
+      flex: 1 1 240px;
+      min-width: 180px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
+
+    .lead-role-header {
+      font-weight: bold;
+      color: #00338D;
+      font-size: 0.9em;
+      margin-bottom: 6px;
+    }
+
+    .lead-role ul {
+      margin: 0;
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+    .lead-role li {
+      color: #333333;
+      font-size: 0.9em;
+      line-height: 1.5;
+      margin-bottom: 2px;
+    }
+
+    .back-to-top {
+      text-align: right;
+      font-size: 0.8em;
+      margin: 10px 0 0 0;
+    }
+
+    .back-to-top a {
+      text-decoration: none;
+      color: #00338D;
+      padding: 4px 0; /* tap target */
+    }
+
+    .back-to-top a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      background-color: #00338D;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+    }
+
+    .footer p {
+      margin: 0;
+    }
+
+    .empty-content {
+      color: #999999;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header" id="top">
+    {% if logo_base64 %}<img src="data:image/png;base64,{{ logo_base64 }}" alt="Report Logo" style="max-width: 400px; height: auto; margin-bottom: 16px;">{% endif %}
+    <h1>{{ report_title }}</h1>
+    <div class="date">{{ report_date }}</div>
+  </div>
+
+  <!-- Summary Bar -->
+  <div class="summary">
+    <div class="summary-item">
+      <div class="summary-value">{{ total_deliverables }}</div>
+      <div class="summary-label">Total Deliverables</div>
+    </div>
+    {% for status, items in status_groups %}
+    <div class="summary-item">
+      <a href="#status-{{ loop.index }}">
+        <div class="summary-value">{{ items|length }}</div>
+        <div class="summary-label">{{ status if status else "No Status" }}</div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Main Content -->
+  <div class="section">
+    <div class="intro-text">
+      <p>Hello Team,</p>
+      <p>Please find below a quick summary of this week's key deliverables.</p>
+      <p>For further details, refer to the source data in your project management tool.</p>
+      <p>Questions about the progress shared in this report? Please reach out to your team lead.</p>
+    </div>
+
+    {% for status, deliverables in status_groups %}
+    <!-- Status Section -->
+    <div class="status-header"
+         id="status-{{ loop.index }}"
+         style="background-color: {{ status_config.get(status, {}).get('color', '#6c757d') }};">
+      {{ status if status else "No Status Reported" }} ({{ deliverables|length }})
+    </div>
+
+    {% for item in deliverables %}
+    <div class="deliverable-card">
+      <div class="status-stripe"
+           style="background-color: {{ status_config.get(status, {}).get('color', '#6c757d') }};">
+      </div>
+
+      <div class="card-content">
+        <div class="deliverable-header">
+          <div class="header-left">
+            {% if item.priority and item.priority != 'nan' %}
+            <div class="priority-badge">{{ item.priority }}</div>
+            {% endif %}
+
+            <div class="title-section">
+              <div class="deliverable-title">
+                {{ item.deliverable if item.deliverable and item.deliverable != 'nan' else empty_states.deliverable }}
+              </div>
+              {% if item.initiative and item.initiative != 'nan' %}
+              <div class="initiative-subtitle">
+                Initiative (L3): {{ item.initiative }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="header-right">
+            {% if item.event_phase and item.event_phase != 'nan' %}
+            <div class="phase-lozenge">{{ item.event_phase }}</div>
+            {% else %}
+            <div class="phase-lozenge-default">Phase not set</div>
+            {% endif %}
+
+            {% if not status or status == '' %}
+            <div class="no-status-lozenge">No Status Reported</div>
+            {% endif %}
+
+            <div class="due-date">
+              <span class="due-date-label">Due:</span>
+              {% if item.delivery_date and item.delivery_date != 'nan' and item.delivery_date != '' %}
+              {{ item.delivery_date }}
+              {% else %}
+              TBD
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="deliverable-details">
+          <!-- Achievements and Risks Row -->
+          <div class="detail-row">
+            <div class="detail-column">
+              <div class="detail-header">Key Achievements</div>
+              <div class="detail-content">
+                {% if item.key_achievements and item.key_achievements != 'nan' %}
+                {{ item.key_achievements | safe }}
+                {% else %}
+                <span class="empty-content">No achievements reported</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="detail-column">
+              <div class="detail-header">Risks & Issues</div>
+              <div class="detail-content">
+                {% if item.risks_issues and item.risks_issues != 'nan' %}
+                {{ item.risks_issues | safe }}
+                {% else %}
+                <span class="empty-content">No risks or issues</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Leads Section (below achievements/risks) -->
+          <div class="leads-section">
+            <div class="detail-header">Deliverable Leads</div>
+            {% set has_leads = namespace(value=false) %}
+            {% for role in role_display_order %}
+              {% if item.leads.get(role) and item.leads[role]|length > 0 %}
+                {% set has_leads.value = true %}
+              {% endif %}
+            {% endfor %}
+
+            {% if has_leads.value %}
+            <div class="leads-grid">
+              {% for role in role_display_order %}
+                {% if item.leads.get(role) and item.leads[role]|length > 0 %}
+                  {% set filtered_names = [] %}
+                  {% for name in item.leads[role] %}
+                    {% if name and name != 'nan' %}
+                      {% set _ = filtered_names.append(name) %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if filtered_names|length > 0 %}
+                  <div class="lead-role">
+                    <div class="lead-role-header">{{ role }}</div>
+                    <ul>
+                      {% for name in filtered_names %}
+                      <li>{{ name }}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="detail-content">
+              <span class="empty-content">No leads assigned</span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <p class="back-to-top">
+      <a href="#top">Back to summary ↑</a>
+    </p>
+
+    {% if not loop.last %}
+    <div class="divider"></div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Weekly Status Report | Generated {{ report_date }}</p>
+  </div>
+</body>
+</html>

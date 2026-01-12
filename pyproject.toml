@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "report-generator"
+version = "2.0.0"
+description = "Flexible report generator for creating status reports from CSV data"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+keywords = ["report", "generator", "csv", "html", "email"]
+dependencies = [
+    "pandas>=2.0.0",
+    "jinja2>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=24.0.0",
+    "pylint>=3.0.0",
+    "isort>=5.0.0",
+]
+
+[project.scripts]
+report-generator = "report_generator.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/umckinney/report-generator"
+Documentation = "https://github.com/umckinney/report-generator#readme"
+Repository = "https://github.com/umckinney/report-generator.git"
+Issues = "https://github.com/umckinney/report-generator/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.pylint.messages_control]
+disable = ["too-few-public-methods"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

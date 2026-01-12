@@ -1,0 +1,6 @@
+Initiatives (L3),L4 Deliverables,Deliverable Status,Event Phase,L4 Priority,Delivery Date,Risks & Issues,Key Achievements,Program Workstream Lead,Product Workstream Lead,Engineering Workstream Lead,Design Workstream Lead,QA Workstream Lead
+Platform Migration,API Gateway Upgrade to v2,Off Track,,P2,,,Aligned on upgrade approach. Working with teams to identify estimates.,Sarah Johnson,Michael Chen,David Park,,
+User Analytics,Analytics Dashboard M2 - User Engagement,On Track,In Development,P1,2025-03-15,"Data validation in progress.","Dashboard infrastructure progressing as expected.",Sarah Johnson,Emily Rodriguez,James Wilson,,
+Data Compliance,Automated Data Retention Process,At Risk,In Development,P1,2025-03-20,Processing currently on hold.,Retention process targeting 5M records will start next week.,Alex Thompson,Chris Martinez,Ryan Lee,,
+Service Unification,Service Integration - Validation,On Track,In Development,P1,2025-03-25,,All code deployed to staging.,Morgan Davis,Jamie Brown,Casey Miller,,
+Security Enhancement,Real-time Fraud Detection,Complete,Complete,P1,2025-02-28,,Detection system launch completed.,Quinn Foster,Riley Garcia,Drew White,,

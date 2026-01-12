@@ -5,30 +5,54 @@ __pycache__/
 *.so
 .Python
 *.egg-info/
-dist/
-build/
+*.egg
 
 # Virtual environment
 .venv/
 venv/
 env/
+ENV/
 
-# IDE
+# IDE and editors
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
 # Testing
 .pytest_cache/
 .coverage
 htmlcov/
+.tox/
+.nox/
 
-# Outputs
+# Build and distribution
+build/
+dist/
+*.spec
+
+# Outputs (generated reports)
 outputs/*.html
 outputs/*.eml
 !outputs/.gitkeep
 
-# Environment
+# Environment and secrets
 .env
+.env.local
+*.pem
+*.key
+
+# Real/sensitive data exports
+tests/fixtures/TestKeyPrioritiesReview.csv
+
+# Temporary and development files
+*.log
+*.tmp
+*.temp
