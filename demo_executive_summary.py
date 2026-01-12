@@ -47,7 +47,7 @@ def main():
     print()
 
     # Find test CSV
-    test_csv = Path(__file__).parent / "tests" / "fixtures" / "KeyPrioritiesReview-10.csv"
+    test_csv = Path(__file__).parent / "tests" / "fixtures" / "mock_data.csv"
     if not test_csv.exists():
         print(f"❌ Error: Test CSV not found at {test_csv}")
         return 1
