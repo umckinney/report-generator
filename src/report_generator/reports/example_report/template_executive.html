@@ -24,6 +24,13 @@
       font-size: 1.8em;
     }
 
+    .header .subtitle {
+      margin-top: 6px;
+      font-size: 0.95em;
+      opacity: 0.85;
+      font-style: italic;
+    }
+
     .header .date {
       margin-top: 8px;
       font-size: 1em;
@@ -54,7 +61,7 @@
       text-decoration: none;
       color: inherit;
       display: block;
-      padding: 8px 4px; /* better tap target */
+      padding: 8px 4px;
     }
 
     .summary-item a:hover {
@@ -104,7 +111,7 @@
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       border-left: 4px solid #00338D;
       padding: 24px 28px;
-      margin: 0;
+      margin: 0 0 30px 0;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
@@ -152,7 +159,7 @@
       background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
       border-left: 4px solid #dc3545;
       padding: 24px 28px;
-      margin: 0;
+      margin: 0 0 30px 0;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
@@ -238,12 +245,27 @@
       color: white;
     }
 
+    /* Critical Deliverables Section */
+    .critical-deliverables-section {
+      margin-top: 30px;
+    }
+
+    .critical-deliverables-header {
+      color: white;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: 1.3em;
+      font-weight: bold;
+      border-radius: 4px;
+      background-color: #dc3545;
+      scroll-margin-top: 20px;
+    }
+
     .status-header {
       color: white;
       padding: 16px 20px;
-      margin-top: 40px;
       margin-bottom: 24px;
-      font-size: 1.3em;
+      font-size: 1.1em;
       font-weight: bold;
       border-radius: 4px;
       scroll-margin-top: 20px;
@@ -252,7 +274,7 @@
     .deliverable-card {
       border: 1px solid #dddddd;
       border-radius: 6px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       overflow: visible;
       background-color: #ffffff;
       display: flex;
@@ -274,7 +296,6 @@
       padding: 16px 20px;
       border-bottom: 2px solid #e0e0e0;
       display: flex;
-      /* no gap here because some email clients ignore it */
       align-items: flex-start;
     }
 
@@ -294,7 +315,7 @@
       flex-shrink: 0;
       align-self: flex-start;
       margin-top: 2px;
-      margin-right: 12px; /* replaces flex gap to avoid collision */
+      margin-right: 12px;
     }
 
     .title-section {
@@ -319,7 +340,6 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      /* no gap: use margins for email safety */
       flex-shrink: 0;
     }
 
@@ -331,7 +351,7 @@
       font-size: 0.85em;
       font-weight: 600;
       white-space: nowrap;
-      margin-top: 4px; /* extra tap spacing */
+      margin-top: 4px;
     }
 
     .phase-lozenge-default {
@@ -343,7 +363,7 @@
       font-size: 0.85em;
       font-weight: 600;
       white-space: nowrap;
-      margin-top: 4px; /* extra tap spacing */
+      margin-top: 4px;
     }
 
     .no-status-lozenge {
@@ -395,11 +415,11 @@
       }
 
       .detail-column + .detail-column {
-        margin-top: 16px; /* extra space between Achievements and Risks when stacked */
+        margin-top: 16px;
       }
 
       .header-right {
-        align-items: flex-start; /* more natural on mobile */
+        align-items: flex-start;
       }
     }
 
@@ -420,7 +440,6 @@
       word-break: break-word;
     }
 
-    /* Bullet styling inside detail sections */
     .detail-content ul {
       margin: 0 0 0 20px;
       padding-left: 18px;
@@ -430,7 +449,7 @@
     .detail-content ul ul {
       margin-top: 4px;
       margin-left: 18px;
-      list-style-type: circle; /* visually distinct sub-bullets */
+      list-style-type: circle;
     }
 
     .detail-content li {
@@ -438,57 +457,21 @@
       line-height: 1.4;
     }
 
-    .leads-section {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #e0e0e0;
-    }
-
-    .leads-grid {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    .lead-role {
-      flex: 1 1 240px;
-      min-width: 180px;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      margin-right: 20px;
-      margin-bottom: 10px;
-    }
-
-    .lead-role-header {
-      font-weight: bold;
-      color: #00338D;
-      font-size: 0.9em;
-      margin-bottom: 6px;
-    }
-
-    .lead-role ul {
-      margin: 0;
-      padding-left: 20px;
-      list-style-type: disc;
-    }
-
-    .lead-role li {
-      color: #333333;
-      font-size: 0.9em;
-      line-height: 1.5;
-      margin-bottom: 2px;
+    .empty-content {
+      color: #999999;
+      font-style: italic;
     }
 
     .back-to-top {
       text-align: right;
       font-size: 0.8em;
-      margin: 10px 0 0 0;
+      margin: 20px 0 0 0;
     }
 
     .back-to-top a {
       text-decoration: none;
       color: #00338D;
-      padding: 4px 0; /* tap target */
+      padding: 4px 0;
     }
 
     .back-to-top a:hover {
@@ -505,11 +488,6 @@
 
     .footer p {
       margin: 0;
-    }
-
-    .empty-content {
-      color: #999999;
-      font-style: italic;
     }
 
     /* Action Items (AI-generated) */
@@ -626,6 +604,7 @@
   <div class="header" id="top">
     {% if logo_base64 %}<img src="data:image/png;base64,{{ logo_base64 }}" alt="Report Logo" style="max-width: 400px; height: auto; margin-bottom: 16px;">{% endif %}
     <h1>{{ report_title }}</h1>
+    <div class="subtitle">Executive Summary - Key Risks & Critical Deliverables</div>
     <div class="date">{{ report_date }}</div>
   </div>
 
@@ -635,7 +614,7 @@
       <div class="summary-value">{{ total_deliverables }}</div>
       <div class="summary-label">Total Deliverables</div>
     </div>
-    {% for status, items in status_groups %}
+    {% for status, items in status_groups_filtered %}
     <div class="summary-item">
       <a href="#status-{{ loop.index }}">
         <div class="summary-value">{{ items|length }}</div>
@@ -761,16 +740,15 @@
   </div>
   {% endif %}
 
-  <!-- Main Content -->
+  <!-- Critical Deliverables Only (Off Track & At Risk) -->
   <div class="section">
-    <div class="intro-text">
-      <p>Hello Team,</p>
-      <p>Please find below a quick summary of this week's key deliverables.</p>
-      <p>For further details, refer to the source data in your project management tool.</p>
-      <p>Questions about the progress shared in this report? Please reach out to your team lead.</p>
+    {% if status_groups_filtered %}
+    <div class="critical-deliverables-header" id="critical-section">
+      Critical Deliverables (Off Track & At Risk)
     </div>
 
-    {% for status, deliverables in status_groups %}
+    {% for status, deliverables in status_groups_filtered %}
+    {% if deliverables|length > 0 %}
     <!-- Status Section -->
     <div class="status-header"
          id="status-{{ loop.index }}"
@@ -850,47 +828,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Leads Section (below achievements/risks) -->
-          <div class="leads-section">
-            <div class="detail-header">Deliverable Leads</div>
-            {% set has_leads = namespace(value=false) %}
-            {% for role in role_display_order %}
-              {% if item.leads.get(role) and item.leads[role]|length > 0 %}
-                {% set has_leads.value = true %}
-              {% endif %}
-            {% endfor %}
-
-            {% if has_leads.value %}
-            <div class="leads-grid">
-              {% for role in role_display_order %}
-                {% if item.leads.get(role) and item.leads[role]|length > 0 %}
-                  {% set filtered_names = [] %}
-                  {% for name in item.leads[role] %}
-                    {% if name and name != 'nan' %}
-                      {% set _ = filtered_names.append(name) %}
-                    {% endif %}
-                  {% endfor %}
-
-                  {% if filtered_names|length > 0 %}
-                  <div class="lead-role">
-                    <div class="lead-role-header">{{ role }}</div>
-                    <ul>
-                      {% for name in filtered_names %}
-                      <li>{{ name }}</li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="detail-content">
-              <span class="empty-content">No leads assigned</span>
-            </div>
-            {% endif %}
-          </div>
         </div>
       </div>
     </div>
@@ -903,12 +840,18 @@
     {% if not loop.last %}
     <div class="divider"></div>
     {% endif %}
+    {% endif %}
     {% endfor %}
+    {% else %}
+    <div class="section" style="text-align: center; padding: 40px 20px; color: #999;">
+      <p>No critical deliverables to report (all deliverables are on track)</p>
+    </div>
+    {% endif %}
   </div>
 
   <!-- Footer -->
   <div class="footer">
-    <p>Weekly Status Report | Generated {{ report_date }}</p>
+    <p>Weekly Executive Summary | Generated {{ report_date }}</p>
   </div>
 </body>
 </html>

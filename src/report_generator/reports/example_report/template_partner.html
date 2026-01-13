@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: #333333;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    .header {
+      background-color: #00338D;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+
+    .header h2 {
+      margin: 8px 0 0 0;
+      font-size: 1.1em;
+      font-weight: normal;
+      opacity: 0.95;
+    }
+
+    .header .date {
+      margin-top: 8px;
+      font-size: 1em;
+      opacity: 0.9;
+    }
+
+    /* Summary bar with counts and links */
+    .summary {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-bottom: 3px solid #FFD100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .summary-item {
+      text-align: center;
+      min-width: 120px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .summary-value {
+      font-size: 2em;
+      font-weight: 700;
+      color: #00338D;
+      line-height: 1;
+    }
+
+    .summary-label {
+      font-size: 0.9em;
+      color: #666666;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section {
+      padding: 30px 20px;
+    }
+
+    .intro-text {
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .intro-text p {
+      margin: 0 0 12px 0;
+    }
+
+    .intro-text a {
+      color: #00338D;
+      text-decoration: underline;
+    }
+
+    .divider {
+      border-top: 4px solid #FFD100;
+      margin: 40px 0;
+    }
+
+    /* Partner Disclaimer */
+    .partner-disclaimer {
+      background-color: #e8f4f8;
+      border-left: 4px solid #17a2b8;
+      padding: 16px 20px;
+      margin: 0 0 24px 0;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #0c5460;
+    }
+
+    .partner-disclaimer strong {
+      color: #0c5460;
+    }
+
+    /* Executive Summary (AI-generated) */
+    .executive-summary {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-left: 4px solid #00338D;
+      padding: 24px 28px;
+      margin: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .executive-summary-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .executive-summary-header h2 {
+      margin: 0;
+      font-size: 1.2em;
+      color: #00338D;
+      font-weight: 600;
+    }
+
+    .ai-badge {
+      background-color: #00338D;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7em;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .executive-summary-content {
+      font-size: 1.05em;
+      line-height: 1.7;
+      color: #2c3e50;
+      font-weight: 400;
+    }
+
+    .executive-summary-footer {
+      margin-top: 12px;
+      font-size: 0.8em;
+      color: #7f8c8d;
+      font-style: italic;
+    }
+
+    /* Risk Analysis (AI-generated) - Partner Safe Version */
+    .risk-analysis {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+      border-left: 4px solid #17a2b8;
+      padding: 24px 28px;
+      margin: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .risk-analysis-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 8px;
+    }
+
+    .risk-analysis-header h2 {
+      margin: 0;
+      font-size: 1.2em;
+      color: #17a2b8;
+      font-weight: 600;
+    }
+
+    .risk-section {
+      margin-bottom: 20px;
+    }
+
+    .risk-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .risk-section-title {
+      font-weight: 600;
+      color: #17a2b8;
+      margin-bottom: 10px;
+      font-size: 1em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .theme-item {
+      background-color: white;
+      border-left: 3px solid #17a2b8;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .theme-name {
+      font-weight: 600;
+      color: #00338D;
+      margin-bottom: 4px;
+    }
+
+    .theme-description {
+      color: #333;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .severity-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.75em;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+
+    .severity-high {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .severity-medium {
+      background-color: #ffc107;
+      color: #333;
+    }
+
+    .severity-low {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .status-header {
+      color: white;
+      padding: 16px 20px;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      font-size: 1.3em;
+      font-weight: bold;
+      border-radius: 4px;
+      scroll-margin-top: 20px;
+    }
+
+    .status-summary-card {
+      border: 1px solid #dddddd;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      padding: 20px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-summary-content {
+      flex: 1;
+    }
+
+    .status-summary-count {
+      font-size: 2.5em;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-left: 20px;
+    }
+
+    .detail-header {
+      font-weight: bold;
+      color: #00338D;
+      margin-bottom: 8px;
+      font-size: 0.95em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-content {
+      color: #333333;
+      line-height: 1.6;
+      font-size: 0.95em;
+    }
+
+    .detail-content ul {
+      margin: 0 0 0 20px;
+      padding-left: 18px;
+      list-style-type: disc;
+    }
+
+    .detail-content li {
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .empty-content {
+      color: #999999;
+      font-style: italic;
+    }
+
+    .footer {
+      background-color: #00338D;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+    }
+
+    .footer p {
+      margin: 0;
+    }
+
+    .no-data-message {
+      color: #666666;
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .status-summary-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .status-summary-count {
+        margin-left: 0;
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header" id="top">
+    {% if logo_base64 %}<img src="data:image/png;base64,{{ logo_base64 }}" alt="Report Logo" style="max-width: 400px; height: auto; margin-bottom: 16px;">{% endif %}
+    <h1>{{ report_title }}</h1>
+    <h2>Partner Status Update</h2>
+    <div class="date">{{ report_date }}</div>
+  </div>
+
+  <!-- Summary Bar -->
+  <div class="summary">
+    <div class="summary-item">
+      <div class="summary-value">{{ total_deliverables }}</div>
+      <div class="summary-label">Total Initiatives</div>
+    </div>
+    {% for status, items in status_groups %}
+    <div class="summary-item">
+      <div class="summary-value">{{ items|length }}</div>
+      <div class="summary-label">{{ status if status else "No Status" }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Partner Disclaimer -->
+  <div class="section">
+    <div class="partner-disclaimer">
+      <strong>Note:</strong> This is an external partner view with limited internal details. For detailed information about individual deliverables, leads, or internal status, please contact your primary liaison.
+    </div>
+
+    <!-- Executive Summary (AI-generated, if available) -->
+    {% if synthesis and synthesis.executive_summary %}
+    <div class="executive-summary">
+      <div class="executive-summary-header">
+        <h2>Executive Summary</h2>
+        <span class="ai-badge">AI-Generated</span>
+      </div>
+      <div class="executive-summary-content">
+        {{ synthesis.executive_summary }}
+      </div>
+      <div class="executive-summary-footer">
+        Generated by {{ synthesis.model | default('AI') }} on {{ synthesis.generated_at | default('unknown date') }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Risk & Theme Analysis (Partner-Safe Version - Low/Medium Risks Only) -->
+    {% if synthesis and synthesis.risk_analysis %}
+      {% set has_low_medium_themes = synthesis.risk_analysis.themes and synthesis.risk_analysis.themes|selectattr('severity', 'in', ['low', 'medium'])|list %}
+      {% if has_low_medium_themes and has_low_medium_themes|length > 0 %}
+      <div class="risk-analysis">
+        <div class="risk-analysis-header">
+          <h2>Key Themes & Areas of Focus</h2>
+          <span class="ai-badge">AI-Generated</span>
+        </div>
+
+        <!-- Themes (Low/Medium severity only) -->
+        <div class="risk-section">
+          <div class="risk-section-title">Cross-Cutting Themes</div>
+          {% for theme in has_low_medium_themes %}
+          <div class="theme-item">
+            <div class="theme-name">
+              {{ theme.name }}
+              <span class="severity-badge severity-{{ theme.severity }}">{{ theme.severity }}</span>
+            </div>
+            <div class="theme-description">{{ theme.description }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="executive-summary-footer">
+          Generated by {{ synthesis.model | default('AI') }} on {{ synthesis.generated_at | default('unknown date') }}
+        </div>
+      </div>
+      {% endif %}
+    {% endif %}
+
+    <!-- Status Summary Section -->
+    <div class="intro-text">
+      <p><strong>Project Status Overview</strong></p>
+      <p>Below is a high-level summary of initiative status across all tracked deliverables. For detailed information about specific initiatives or concerns, please reach out to your primary project contact.</p>
+    </div>
+
+    <!-- Status Groups with Aggregate Counts -->
+    {% for status, deliverables in status_groups %}
+    <div class="status-header"
+         id="status-{{ loop.index }}"
+         style="background-color: {{ status_config.get(status, {}).get('color', '#6c757d') }};">
+      {{ status if status else "No Status Reported" }}
+    </div>
+
+    <div class="status-summary-card">
+      <div class="status-summary-content">
+        <div class="detail-header">Total Initiatives: {{ deliverables|length }}</div>
+        <div class="detail-content">
+          <p>{{ deliverables|length }} initiative(s) currently in <strong>{{ status if status else 'No Status' }}</strong> state.</p>
+        </div>
+      </div>
+      <div class="status-summary-count" style="color: {{ status_config.get(status, {}).get('color', '#6c757d') }};">
+        {{ deliverables|length }}
+      </div>
+    </div>
+
+    {% if not loop.last %}
+    <div class="divider"></div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Partner Status Report | Generated {{ report_date }}</p>
+    <p style="margin-top: 8px; font-size: 0.8em;">For detailed information or questions, contact your project liaison.</p>
+  </div>
+</body>
+</html>

@@ -8,7 +8,7 @@ generating executive summaries, risk analysis, and other insights.
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from report_generator.reasoning.prompts import executive_summary, risk_analysis
+from report_generator.reasoning.prompts import action_items, executive_summary, risk_analysis
 from report_generator.reasoning.provider import LLMProvider
 
 
@@ -111,6 +111,16 @@ class ReportSynthesizer:
                 synthesis["risk_analysis"] = None
                 synthesis["risk_analysis_error"] = str(e)
 
+        # Action items (Phase 5)
+        if features.get("action_items", False):
+            try:
+                action_result = self._generate_action_items(context)
+                if action_result:  # Only add if there are actionable items
+                    synthesis["action_items"] = action_result
+            except Exception as e:
+                synthesis["action_items"] = None
+                synthesis["action_items_error"] = str(e)
+
         # Return original context + synthesis
         return {
             **context,  # Original data preserved
@@ -187,6 +197,39 @@ class ReportSynthesizer:
             Dictionary with 'input_tokens' and 'output_tokens'
         """
         return self.provider.get_token_usage()
+
+    def _generate_action_items(self, context: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Generate action item recommendations.
+
+        Args:
+            context: Report context
+
+        Returns:
+            Dictionary with action items, or None if no critical items
+        """
+        # Build prompt
+        prompt = action_items.build_prompt(context)
+
+        if prompt is None:
+            # No critical items requiring actions
+            return None
+
+        # Call LLM with higher token limit for action generation
+        response = self.provider.generate(
+            prompt=prompt,
+            system_prompt=(
+                "You are an AI Chief of Staff helping identify concrete next steps. "
+                "Return valid JSON only. Be specific and actionable."
+            ),
+            max_tokens=self.max_tokens * 2,  # Actions need more space
+            temperature=self.temperature,
+        )
+
+        # Parse response
+        parsed = action_items.parse_response(response)
+
+        return parsed
 
     def reset_token_usage(self) -> None:
         """Reset token usage counters."""
