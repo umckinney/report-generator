@@ -20,16 +20,18 @@ The **Chief of Staff (CoS) Agent** augments human judgment by consolidating frag
 
 ## Project Status
 
-**Current State**: Phase 3 Complete - Risk & Theme Analysis now available! ✨
+**Current State**: Phase 5 Complete - Action Item Recommendations now available! ✨
 
 **Latest Features:**
+- ✅ **AI-powered action items**: Concrete, prioritized recommendations based on risks and blockers
+- ✅ **Multi-audience support**: Generate executive, technical, and partner views from the same data
 - ✅ AI-powered executive summary generation
 - ✅ AI-powered risk & theme analysis with cross-cutting pattern detection
 - ✅ Multi-provider support (Anthropic Claude, ready for OpenAI)
 - ✅ Beautiful visual integration with AI badges and severity indicators
 - ✅ Feature flag system for opt-in AI features
 - ✅ Graceful degradation and error handling
-- ✅ Comprehensive testing (188 tests, 97% coverage)
+- ✅ Comprehensive testing (212 tests, 94% coverage)
 
 The system includes both deterministic report generation and optional AI-powered synthesis for intelligent insights.
 
@@ -146,11 +148,89 @@ The Chief of Staff Agent can analyze all risks and issues across deliverables to
 **Configuration:**
 Same as Executive Summary - just ensure `ENABLE_REASONING=true`. Risk analysis is enabled by default when reasoning is active.
 
+### Multi-Audience Support (Phase 4)
+
+The Chief of Staff Agent can generate three different views of the same report, tailored for different audiences:
+
+**Audience Types:**
+
+1. **Executive View** (`--audience executive`)
+   - High-level summary focused on decision-making
+   - Shows only critical items (Off Track, At Risk)
+   - Emphasizes AI synthesis and risk themes
+   - Omits technical details and "On Track" items
+
+2. **Technical View** (`--audience technical`)
+   - Complete details for engineering teams
+   - All deliverables with full status updates
+   - Technical blockers and dependencies
+   - Resource allocation details
+
+3. **Partner View** (`--audience partner`)
+   - External-safe, sanitized information
+   - Hides internal lead names (shows "Internal Team")
+   - Filters out high-severity risks and anomalies
+   - Aggregate status counts without individual details
+
+**Example usage:**
+```bash
+# Generate executive summary
+report-generator generate --report kpr --csv data.csv --audience executive
+
+# Generate technical deep-dive
+report-generator generate --report kpr --csv data.csv --audience technical
+
+# Generate partner-safe update
+report-generator generate --report kpr --csv data.csv --audience partner
+```
+
+**Benefits:**
+- **One CSV → Three Reports**: No need to manually create different versions
+- **Consistent Data**: All views use the same source data
+- **Automatic Sanitization**: Partner view automatically filters sensitive info
+- **AI-Enhanced**: All views benefit from AI synthesis when enabled
+
+### Action Item Recommendations (Phase 5)
+
+The Chief of Staff Agent can automatically generate concrete, prioritized action items based on program risks and blockers.
+
+**What it does:**
+- Analyzes critical deliverables (Off Track, At Risk)
+- Generates 3-5 specific, actionable recommendations
+- Assigns ownership to appropriate leads or suggests "Program Manager"
+- Provides clear success criteria for each action
+- Includes confidence levels (HIGH, MEDIUM, LOW) based on clarity of next steps
+
+**Example output:**
+
+**Action Items** (AI-Generated)
+
+1. **Hire additional engineers for API team** (HIGH confidence)
+   - **Owner:** Alice
+   - **Description:** Prioritize hiring 2 senior engineers to address understaffing
+   - **Success Criterion:** Team at full capacity within 30 days
+   - **Related to:** API Upgrade
+
+2. **Expedite vendor approval process** (MEDIUM confidence)
+   - **Owner:** Bob
+   - **Description:** Work with procurement to fast-track database vendor selection
+   - **Success Criterion:** Vendor approved within 1 week
+   - **Related to:** Database Migration
+
+**Configuration:**
+Action items are automatically enabled when `ENABLE_REASONING=true`. They only appear when there are critical (Off Track/At Risk) deliverables requiring attention.
+
+**Benefits:**
+- **Specific & Actionable**: No vague suggestions like "monitor the situation"
+- **Prioritized**: Highest-impact actions first
+- **Confidence-Rated**: Know which actions are well-defined vs. need refinement
+- **Owner-Assigned**: Clear accountability for each action
+
 ### Coming Soon
 
-- **Multi-Audience Support**: Generate executive, technical, and partner views
-- **Action Item Recommendations**: AI-suggested next steps
 - **Historical Trend Analysis**: Week-over-week change detection
+- **Dependency Mapping**: Visualize deliverable dependencies
+- **Custom Prompt Templates**: Configure AI behavior per report type
 
 ## Development
 

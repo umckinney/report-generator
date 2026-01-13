@@ -3,23 +3,33 @@ HTML report generator for Key Priorities report.
 
 This module orchestrates the complete report generation process:
 Load → Validate → Transform → Build → Render → Save
+
+Supports multi-audience rendering: executive, technical, partner views.
 """
 
 import base64
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 from jinja2 import Environment, FileSystemLoader
 
 from report_generator.data.loader import TabularDataLoader
 from report_generator.data.transformers import DataTransformer
 from report_generator.data.validator import DataValidator
+from report_generator.output.renderers import (
+    AudienceRenderer,
+    ExecutiveRenderer,
+    PartnerRenderer,
+    TechnicalRenderer,
+)
 from report_generator.reports.example_report.builder import KPRReportBuilder
 from report_generator.reports.example_report.config import (
     EXPECTED_COLUMNS,
     clean_transformed_row,
     get_transformer_config,
 )
+
+AudienceType = Literal["executive", "technical", "partner"]
 
 
 class KPRReportGenerator:
@@ -41,13 +51,22 @@ class KPRReportGenerator:
         self.validator = DataValidator()
         self.builder = KPRReportBuilder()
 
-        # Setup Jinja2 template environment
-        template_dir = Path(__file__).parent
-        self.jinja_env = Environment(loader=FileSystemLoader(template_dir))
+        # Setup template directory
+        self.template_dir = Path(__file__).parent
+
+        # Setup Jinja2 template environment (for backward compatibility)
+        self.jinja_env = Environment(loader=FileSystemLoader(self.template_dir))
         self.template = self.jinja_env.get_template("template.html")
 
+        # Initialize audience renderers
+        self.renderers: dict[str, AudienceRenderer] = {
+            "executive": ExecutiveRenderer(self.template_dir),
+            "technical": TechnicalRenderer(self.template_dir),
+            "partner": PartnerRenderer(self.template_dir),
+        }
+
         # Load logo as base64 (optional - place your logo in assets/logo.png)
-        logo_path = template_dir / "assets" / "logo.png"
+        logo_path = self.template_dir / "assets" / "logo.png"
         if logo_path.exists():
             with open(logo_path, "rb") as f:
                 logo_bytes = f.read()
@@ -55,7 +74,12 @@ class KPRReportGenerator:
         else:
             self.logo_base64 = ""  # No logo if file missing
 
-    def generate(self, csv_path: str | Path, output_path: Optional[str | Path] = None) -> str:
+    def generate(
+        self,
+        csv_path: str | Path,
+        output_path: Optional[str | Path] = None,
+        audience: Optional[AudienceType] = None,
+    ) -> str:
         """
         Generate KPR report from CSV file.
 
@@ -64,12 +88,15 @@ class KPRReportGenerator:
         2. Validate structure
         3. Transform data
         4. Build template context
-        5. Render HTML
-        6. Optionally save to file
+        5. Apply reasoning layer (if enabled)
+        6. Render HTML (using audience-specific renderer if specified)
+        7. Optionally save to file
 
         Args:
             csv_path: Path to CSV file with KPR data
             output_path: Optional path to save HTML output
+            audience: Optional audience type ("executive", "technical", "partner")
+                     If None, uses default template (technical view)
 
         Returns:
             HTML string of rendered report
@@ -80,8 +107,12 @@ class KPRReportGenerator:
 
         Example:
             >>> generator = KPRReportGenerator()
-            >>> html = generator.generate("data/kpr.csv", "output/report.html")
-            >>> print(f"Report saved to output/report.html")
+            >>> # Default view
+            >>> html = generator.generate("data/kpr.csv")
+            >>> # Executive view
+            >>> html = generator.generate("data/kpr.csv", audience="executive")
+            >>> # Partner view with output
+            >>> html = generator.generate("data/kpr.csv", "output/partner.html", audience="partner")
         """
         # Step 1: Load data
         print(f"Loading data from {csv_path}...")
@@ -138,15 +169,30 @@ class KPRReportGenerator:
                     max_tokens=reasoning_config.max_tokens,
                     temperature=reasoning_config.temperature,
                 )
-                context = synthesizer.synthesize(context, features={"executive_summary": True})
+                context = synthesizer.synthesize(
+                    context,
+                    features={
+                        "executive_summary": True,
+                        "risk_analysis": True,
+                        "action_items": True,  # Phase 5 - Enable action items
+                    }
+                )
                 print(f"✓ AI synthesis complete (tokens: {synthesizer.get_token_usage()})")
             except Exception as e:
                 print(f"⚠ Warning: AI synthesis failed: {e}")
                 # Continue without synthesis - graceful degradation
 
-        # Step 5: Render template
+        # Step 5: Render template (using audience renderer if specified)
         print("Rendering HTML template...")
-        html = self.template.render(context)
+        if audience and audience in self.renderers:
+            # Use audience-specific renderer
+            renderer = self.renderers[audience]
+            print(f"  Using {renderer.get_audience_name()} renderer")
+            html = renderer.render(context, logo_base64=self.logo_base64)
+        else:
+            # Default rendering (backward compatibility)
+            context["logo_base64"] = self.logo_base64
+            html = self.template.render(context)
         print("✓ Template rendered")
 
         # Step 6: Save to file if requested

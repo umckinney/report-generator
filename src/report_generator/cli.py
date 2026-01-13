@@ -114,7 +114,8 @@ def generate_report(args):
 
         # Generate HTML
         print(f"Generating report from: {csv_path}")
-        html = generator.generate(csv_path, output_path)
+        audience = getattr(args, "audience", None)
+        html = generator.generate(csv_path, output_path, audience=audience)
 
         print()
         print("=" * 70)
@@ -176,11 +177,17 @@ Examples:
   # Generate KPR report (saves to outputs/)
   python -m report_generator generate --report kpr --csv data.csv
 
-  # Generate and specify output location
-  python -m report_generator generate --report kpr --csv data.csv --output my_report.html
+  # Generate executive summary view
+  python -m report_generator generate --report kpr --csv data.csv --audience executive
+
+  # Generate partner-safe view
+  python -m report_generator generate --report kpr --csv data.csv --audience partner
 
   # Generate and open email draft
   python -m report_generator generate --report kpr --csv data.csv --email
+
+  # Generate technical view with email
+  python -m report_generator generate --report kpr --csv data.csv --audience technical --email
 
   # List available reports
   python -m report_generator list-reports
@@ -208,6 +215,11 @@ Examples:
         "--email",
         action="store_true",
         help="Open email draft in mail client after generating",
+    )
+    generate_parser.add_argument(
+        "--audience",
+        choices=["executive", "technical", "partner"],
+        help="Target audience for the report (executive: high-level summary, technical: full details, partner: external-safe)",
     )
 
     # List reports command
