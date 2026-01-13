@@ -124,7 +124,7 @@ def main():
                 temperature=config.temperature,
             )
             enriched = synthesizer.synthesize(
-                context, features={"executive_summary": True}
+                context, features={"executive_summary": True, "risk_analysis": True}
             )
 
             if "synthesis" in enriched and enriched["synthesis"].get(
@@ -149,6 +149,38 @@ def main():
                     f"  Total:  {usage['input_tokens'] + usage['output_tokens']:,} tokens"
                 )
                 print()
+
+            # Display risk analysis if available
+            if "synthesis" in enriched and enriched["synthesis"].get("risk_analysis"):
+                print("-" * 70)
+                print("AI-Generated Risk Analysis")
+                print("-" * 70)
+                print()
+
+                risk_analysis = enriched["synthesis"]["risk_analysis"]
+
+                if risk_analysis.get("themes"):
+                    print("Cross-Cutting Themes:")
+                    for theme in risk_analysis["themes"]:
+                        print(f"  • {theme['name']} ({theme['severity'].upper()})")
+                        print(f"    {theme['description']}")
+                        print(f"    Affects: {', '.join(theme['affected_deliverables'])}")
+                        print()
+
+                if risk_analysis.get("critical_risks"):
+                    print("Critical Risks:")
+                    for risk in risk_analysis["critical_risks"]:
+                        print(f"  • {risk['deliverable']}")
+                        print(f"    Risk: {risk['risk']}")
+                        print(f"    Why Critical: {risk['reason']}")
+                        print()
+
+                if risk_analysis.get("anomalies"):
+                    print("Anomalies:")
+                    for anomaly in risk_analysis["anomalies"]:
+                        print(f"  • {anomaly['deliverable']}")
+                        print(f"    {anomaly['issue']}")
+                        print()
 
         print("-" * 70)
         print("Next Steps:")

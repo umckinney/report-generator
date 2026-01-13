@@ -51,21 +51,28 @@ class TestReportSynthesizer:
         assert result["synthesis"]["model"] == "claude-sonnet-4-5"
 
     def test_synthesize_default_features(self):
-        """Test that default features only include executive summary."""
+        """Test that default features include executive summary and risk analysis."""
         mock_provider = Mock()
-        mock_provider.generate.return_value = "Summary text"
+        # First call for executive summary, second for risk analysis
+        mock_provider.generate.side_effect = [
+            "Summary text",
+            '{"themes": [], "critical_risks": [], "anomalies": []}',
+        ]
         mock_provider.model = "claude-sonnet-4-5"
 
         synthesizer = ReportSynthesizer(mock_provider)
-        context = {"total_deliverables": 5, "status_groups": []}
+        context = {
+            "total_deliverables": 5,
+            "status_groups": [
+                ("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])
+            ],
+        }
 
         result = synthesizer.synthesize(context)  # No features specified
 
         assert "synthesis" in result
         assert "executive_summary" in result["synthesis"]
-        # Future features not present
-        assert "risk_analysis" not in result["synthesis"]
-        assert "theme_extraction" not in result["synthesis"]
+        assert "risk_analysis" in result["synthesis"]
 
     def test_synthesize_executive_summary_disabled(self):
         """Test synthesis with executive summary disabled."""
@@ -161,7 +168,9 @@ class TestReportSynthesizer:
             "report_date": "Test Date",
         }
 
-        synthesizer.synthesize(context, features={"executive_summary": True})
+        synthesizer.synthesize(
+            context, features={"executive_summary": True, "risk_analysis": False}
+        )
 
         # Verify provider was called with correct parameters
         mock_provider.generate.assert_called_once()
@@ -174,3 +183,143 @@ class TestReportSynthesizer:
         assert "prompt" in call_args.kwargs
         # Prompt should contain context data
         assert "Test Date" in call_args.kwargs["prompt"]
+
+    def test_synthesize_with_risk_analysis(self):
+        """Test synthesis with risk analysis enabled."""
+        mock_provider = Mock()
+        mock_provider.generate.return_value = """{
+            "themes": [
+                {
+                    "name": "Resource Constraints",
+                    "description": "Multiple teams facing staffing issues",
+                    "affected_deliverables": ["Feature A", "Feature B"],
+                    "severity": "high"
+                }
+            ],
+            "critical_risks": [
+                {
+                    "deliverable": "Feature A",
+                    "risk": "Team understaffed",
+                    "reason": "Impacts launch timeline"
+                }
+            ],
+            "anomalies": []
+        }"""
+        mock_provider.model = "claude-sonnet-4-5"
+
+        synthesizer = ReportSynthesizer(mock_provider)
+
+        context = {
+            "status_groups": [
+                (
+                    "At Risk",
+                    [
+                        {
+                            "deliverable": "Feature A",
+                            "risks_issues": "Resource constraints",
+                        }
+                    ],
+                )
+            ]
+        }
+
+        result = synthesizer.synthesize(
+            context, features={"executive_summary": False, "risk_analysis": True}
+        )
+
+        # Risk analysis added
+        assert "synthesis" in result
+        assert "risk_analysis" in result["synthesis"]
+        assert len(result["synthesis"]["risk_analysis"]["themes"]) == 1
+        assert (
+            result["synthesis"]["risk_analysis"]["themes"][0]["name"]
+            == "Resource Constraints"
+        )
+        assert len(result["synthesis"]["risk_analysis"]["critical_risks"]) == 1
+
+    def test_synthesize_risk_analysis_no_risks(self):
+        """Test risk analysis when no risks to analyze."""
+        mock_provider = Mock()
+        synthesizer = ReportSynthesizer(mock_provider)
+
+        context = {
+            "status_groups": [
+                (
+                    "On Track",
+                    [
+                        {
+                            "deliverable": "Feature A",
+                            "risks_issues": "No risks or issues reported this week",
+                        }
+                    ],
+                )
+            ]
+        }
+
+        result = synthesizer.synthesize(
+            context, features={"executive_summary": False, "risk_analysis": True}
+        )
+
+        # Risk analysis should not be present
+        assert "synthesis" in result
+        assert "risk_analysis" not in result["synthesis"]
+        # Provider should not have been called
+        mock_provider.generate.assert_not_called()
+
+    def test_synthesize_risk_analysis_graceful_degradation(self):
+        """Test that risk analysis fails gracefully on LLM error."""
+        mock_provider = Mock()
+        mock_provider.generate.side_effect = Exception("API error")
+        mock_provider.model = "claude-sonnet-4-5"
+
+        synthesizer = ReportSynthesizer(mock_provider)
+        context = {
+            "status_groups": [
+                ("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])
+            ]
+        }
+
+        # Should not raise exception
+        result = synthesizer.synthesize(
+            context, features={"executive_summary": False, "risk_analysis": True}
+        )
+
+        assert "synthesis" in result
+        assert result["synthesis"]["risk_analysis"] is None
+        assert "risk_analysis_error" in result["synthesis"]
+        assert "API error" in result["synthesis"]["risk_analysis_error"]
+
+    def test_risk_analysis_calls_provider_correctly(self):
+        """Test that risk analysis calls provider with correct params."""
+        mock_provider = Mock()
+        mock_provider.generate.return_value = (
+            '{"themes": [], "critical_risks": [], "anomalies": []}'
+        )
+        mock_provider.model = "test"
+
+        synthesizer = ReportSynthesizer(
+            mock_provider, max_tokens=1000, temperature=0.3
+        )
+
+        context = {
+            "status_groups": [
+                ("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])
+            ]
+        }
+
+        synthesizer.synthesize(
+            context, features={"executive_summary": False, "risk_analysis": True}
+        )
+
+        # Verify provider was called with correct parameters
+        mock_provider.generate.assert_called_once()
+        call_args = mock_provider.generate.call_args
+
+        assert call_args.kwargs["max_tokens"] == 1000
+        assert call_args.kwargs["temperature"] == 0.3
+        assert "system_prompt" in call_args.kwargs
+        assert "analyzing program risks" in call_args.kwargs["system_prompt"]
+        assert "JSON" in call_args.kwargs["system_prompt"]
+        assert "prompt" in call_args.kwargs
+        # Prompt should contain risk data
+        assert "Real risk" in call_args.kwargs["prompt"]

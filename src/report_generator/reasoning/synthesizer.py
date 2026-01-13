@@ -8,7 +8,7 @@ generating executive summaries, risk analysis, and other insights.
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from report_generator.reasoning.prompts import executive_summary
+from report_generator.reasoning.prompts import executive_summary, risk_analysis
 from report_generator.reasoning.provider import LLMProvider
 
 
@@ -74,12 +74,11 @@ class ReportSynthesizer:
             >>> result["synthesis"]["executive_summary"]
             'Program is on track with 1 at-risk deliverable...'
         """
-        # Default: only executive summary for now
+        # Default features
         if features is None:
             features = {
                 "executive_summary": True,
-                "risk_analysis": False,  # Phase 3
-                "theme_extraction": False,  # Phase 3
+                "risk_analysis": True,  # Phase 3 - Now available!
                 "action_items": False,  # Phase 5
             }
 
@@ -102,9 +101,15 @@ class ReportSynthesizer:
                 synthesis["executive_summary"] = None
                 synthesis["executive_summary_error"] = str(e)
 
-        # Future features will be added here
-        # if features.get("risk_analysis", False):
-        #     synthesis["risk_analysis"] = self._analyze_risks(context)
+        # Risk analysis
+        if features.get("risk_analysis", False):
+            try:
+                risk_result = self._analyze_risks(context)
+                if risk_result:  # Only add if there are risks to analyze
+                    synthesis["risk_analysis"] = risk_result
+            except Exception as e:
+                synthesis["risk_analysis"] = None
+                synthesis["risk_analysis_error"] = str(e)
 
         # Return original context + synthesis
         return {
@@ -140,6 +145,39 @@ class ReportSynthesizer:
 
         # Parse response
         parsed = executive_summary.parse_response(response)
+
+        return parsed
+
+    def _analyze_risks(self, context: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Analyze risks and extract themes.
+
+        Args:
+            context: Report context
+
+        Returns:
+            Dictionary with themes, critical risks, and anomalies, or None if no risks
+        """
+        # Build prompt
+        prompt = risk_analysis.build_prompt(context)
+
+        if prompt is None:
+            # No risks to analyze
+            return None
+
+        # Call LLM
+        response = self.provider.generate(
+            prompt=prompt,
+            system_prompt=(
+                "You are an AI assistant analyzing program risks. "
+                "Return valid JSON only. Be concise and specific."
+            ),
+            max_tokens=self.max_tokens,
+            temperature=self.temperature,
+        )
+
+        # Parse response
+        parsed = risk_analysis.parse_response(response)
 
         return parsed
 
