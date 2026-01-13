@@ -20,14 +20,16 @@ The **Chief of Staff (CoS) Agent** augments human judgment by consolidating frag
 
 ## Project Status
 
-**Current State**: Phase 2 Complete - AI-powered executive summaries now available! ✨
+**Current State**: Phase 3 Complete - Risk & Theme Analysis now available! ✨
 
 **Latest Features:**
-- ✅ LLM-powered executive summary generation
+- ✅ AI-powered executive summary generation
+- ✅ AI-powered risk & theme analysis with cross-cutting pattern detection
 - ✅ Multi-provider support (Anthropic Claude, ready for OpenAI)
-- ✅ Beautiful visual integration with AI badges
+- ✅ Beautiful visual integration with AI badges and severity indicators
 - ✅ Feature flag system for opt-in AI features
-- ✅ Comprehensive testing (162 tests, 95% coverage)
+- ✅ Graceful degradation and error handling
+- ✅ Comprehensive testing (188 tests, 97% coverage)
 
 The system includes both deterministic report generation and optional AI-powered synthesis for intelligent insights.
 
@@ -117,9 +119,35 @@ export REASONING_TEMPERATURE=0.0     # default (deterministic)
 
 **Privacy:** Your data is sent to Anthropic's API for processing. See [Anthropic's privacy policy](https://www.anthropic.com/privacy) for details.
 
+### Risk & Theme Analysis
+
+The Chief of Staff Agent can analyze all risks and issues across deliverables to identify patterns, critical items, and anomalies.
+
+**What it does:**
+- Identifies cross-cutting themes affecting multiple deliverables (e.g., "resource constraints", "dependency delays")
+- Flags critical risks requiring immediate attention
+- Detects anomalies (vague descriptions, status mismatches, missing information)
+- Provides severity assessment (high/medium/low) for each theme
+- Displays in a dedicated "Risk & Theme Analysis" section with color-coded severity badges
+
+**Example output:**
+
+*Cross-Cutting Themes:*
+- **Resource Constraints (HIGH)** - Multiple teams facing staffing issues
+  - Affects: API Gateway Upgrade, Data Pipeline Modernization
+
+*Critical Risks:*
+- **API Gateway Upgrade** - Team understaffed by 2 engineers
+  - Why Critical: Impacts Q1 launch timeline
+
+*Anomalies:*
+- **User Auth System** - Marked "On Track" but reports major security concerns
+
+**Configuration:**
+Same as Executive Summary - just ensure `ENABLE_REASONING=true`. Risk analysis is enabled by default when reasoning is active.
+
 ### Coming Soon
 
-- **Risk & Theme Analysis**: Cross-cutting themes across deliverables
 - **Multi-Audience Support**: Generate executive, technical, and partner views
 - **Action Item Recommendations**: AI-suggested next steps
 - **Historical Trend Analysis**: Week-over-week change detection
