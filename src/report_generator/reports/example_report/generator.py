@@ -123,6 +123,27 @@ class KPRReportGenerator:
 
         print("✓ Context ready")
 
+        # Step 4.5: Apply reasoning layer (if enabled)
+        from report_generator.reasoning import get_config
+
+        reasoning_config = get_config()
+        if reasoning_config.is_enabled():
+            try:
+                print("Generating AI insights...")
+                provider = reasoning_config.get_provider()
+                from report_generator.reasoning import ReportSynthesizer
+
+                synthesizer = ReportSynthesizer(
+                    provider,
+                    max_tokens=reasoning_config.max_tokens,
+                    temperature=reasoning_config.temperature,
+                )
+                context = synthesizer.synthesize(context, features={"executive_summary": True})
+                print(f"✓ AI synthesis complete (tokens: {synthesizer.get_token_usage()})")
+            except Exception as e:
+                print(f"⚠ Warning: AI synthesis failed: {e}")
+                # Continue without synthesis - graceful degradation
+
         # Step 5: Render template
         print("Rendering HTML template...")
         html = self.template.render(context)
