@@ -138,9 +138,7 @@ class KPRReportGenerator:
                     max_tokens=reasoning_config.max_tokens,
                     temperature=reasoning_config.temperature,
                 )
-                context = synthesizer.synthesize(
-                    context, features={"executive_summary": True}
-                )
+                context = synthesizer.synthesize(context, features={"executive_summary": True})
                 print(f"✓ AI synthesis complete (tokens: {synthesizer.get_token_usage()})")
             except Exception as e:
                 print(f"⚠ Warning: AI synthesis failed: {e}")

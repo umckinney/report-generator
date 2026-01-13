@@ -54,10 +54,7 @@ class ReasoningConfig:
         self.enabled = self._parse_bool_env("ENABLE_REASONING", enabled, default=False)
 
         # Provider selection
-        self.provider = (
-            provider
-            or os.getenv("REASONING_PROVIDER", self.DEFAULT_PROVIDER).lower()
-        )
+        self.provider = provider or os.getenv("REASONING_PROVIDER", self.DEFAULT_PROVIDER).lower()
 
         # Generation parameters
         self.max_tokens = self._parse_int_env(
@@ -128,9 +125,7 @@ class ReasoningConfig:
         }
 
     @staticmethod
-    def _parse_bool_env(
-        env_var: str, override: Optional[bool], default: bool
-    ) -> bool:
+    def _parse_bool_env(env_var: str, override: Optional[bool], default: bool) -> bool:
         """Parse boolean from environment variable."""
         if override is not None:
             return override
@@ -158,9 +153,7 @@ class ReasoningConfig:
         return default
 
     @staticmethod
-    def _parse_float_env(
-        env_var: str, override: Optional[float], default: float
-    ) -> float:
+    def _parse_float_env(env_var: str, override: Optional[float], default: float) -> float:
         """Parse float from environment variable."""
         if override is not None:
             return override

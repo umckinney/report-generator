@@ -9,11 +9,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from report_generator.reasoning.provider import (
-    AnthropicProvider,
-    LLMProviderError,
-    OpenAIProvider,
-)
+from report_generator.reasoning.provider import AnthropicProvider, LLMProviderError, OpenAIProvider
 
 
 class TestAnthropicProvider:
@@ -50,15 +46,15 @@ class TestAnthropicProvider:
         mock_response = Mock()
         mock_response.content = [Mock(text="Generated summary")]
         mock_response.usage = Mock(input_tokens=100, output_tokens=50)
-        
+
         with patch("anthropic.Anthropic") as mock_anthropic:
             mock_client = Mock()
             mock_client.messages.create.return_value = mock_response
             mock_anthropic.return_value = mock_client
-            
+
             provider = AnthropicProvider(api_key="test-key")
             result = provider.generate("Summarize this", max_tokens=500)
-            
+
             assert result == "Generated summary"
             assert provider.get_token_usage() == {"input_tokens": 100, "output_tokens": 50}
 
@@ -88,7 +84,7 @@ class TestAnthropicProvider:
         mock_response = Mock()
         mock_response.content = [Mock(text="Success after retries")]
         mock_response.usage = Mock(input_tokens=100, output_tokens=50)
-        
+
         with patch("anthropic.Anthropic") as mock_anthropic:
             mock_client = Mock()
             mock_client.messages.create.side_effect = [
@@ -97,11 +93,11 @@ class TestAnthropicProvider:
                 mock_response,
             ]
             mock_anthropic.return_value = mock_client
-            
+
             with patch("time.sleep"):
                 provider = AnthropicProvider(api_key="test-key", max_retries=3)
                 result = provider.generate("test prompt")
-                
+
                 assert result == "Success after retries"
                 assert mock_client.messages.create.call_count == 3
 
@@ -111,16 +107,16 @@ class TestAnthropicProvider:
             Mock(content=[Mock(text="First")], usage=Mock(input_tokens=50, output_tokens=25)),
             Mock(content=[Mock(text="Second")], usage=Mock(input_tokens=75, output_tokens=30)),
         ]
-        
+
         with patch("anthropic.Anthropic") as mock_anthropic:
             mock_client = Mock()
             mock_client.messages.create.side_effect = responses
             mock_anthropic.return_value = mock_client
-            
+
             provider = AnthropicProvider(api_key="test-key")
             provider.generate("First")
             provider.generate("Second")
-            
+
             usage = provider.get_token_usage()
             assert usage["input_tokens"] == 125
             assert usage["output_tokens"] == 55
@@ -130,17 +126,17 @@ class TestAnthropicProvider:
         mock_response = Mock()
         mock_response.content = [Mock(text="Response")]
         mock_response.usage = Mock(input_tokens=100, output_tokens=50)
-        
+
         with patch("anthropic.Anthropic") as mock_anthropic:
             mock_client = Mock()
             mock_client.messages.create.return_value = mock_response
             mock_anthropic.return_value = mock_client
-            
+
             provider = AnthropicProvider(api_key="test-key")
             provider.generate("test")
-            
+
             assert provider.get_token_usage()["input_tokens"] == 100
-            
+
             provider.reset_token_usage()
             usage = provider.get_token_usage()
             assert usage["input_tokens"] == 0

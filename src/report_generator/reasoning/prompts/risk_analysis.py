@@ -112,11 +112,7 @@ def _extract_risks(status_groups: List[Tuple[str, List[Dict]]]) -> List[Dict[str
                 "n/a",
                 "",
             ]:
-                risks.append({
-                    "deliverable": deliverable,
-                    "status": status,
-                    "risk": risk_text
-                })
+                risks.append({"deliverable": deliverable, "status": status, "risk": risk_text})
 
     return risks
 
@@ -166,9 +162,4 @@ def parse_response(response: str) -> Dict[str, Any]:
 
     except json.JSONDecodeError as e:
         # Fallback for malformed JSON
-        return {
-            "themes": [],
-            "critical_risks": [],
-            "anomalies": [],
-            "parse_error": str(e)
-        }
+        return {"themes": [], "critical_risks": [], "anomalies": [], "parse_error": str(e)}

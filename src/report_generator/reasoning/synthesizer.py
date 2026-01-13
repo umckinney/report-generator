@@ -117,9 +117,7 @@ class ReportSynthesizer:
             "synthesis": synthesis,
         }
 
-    def _generate_executive_summary(
-        self, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _generate_executive_summary(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """
         Generate 2-3 sentence executive summary.
 

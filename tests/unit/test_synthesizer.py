@@ -24,7 +24,9 @@ class TestReportSynthesizer:
     def test_synthesize_with_executive_summary(self):
         """Test synthesis with executive summary enabled."""
         mock_provider = Mock()
-        mock_provider.generate.return_value = "Program is on track with 2 at-risk items requiring attention."
+        mock_provider.generate.return_value = (
+            "Program is on track with 2 at-risk items requiring attention."
+        )
         mock_provider.model = "claude-sonnet-4-5"
 
         synthesizer = ReportSynthesizer(mock_provider)
@@ -46,7 +48,10 @@ class TestReportSynthesizer:
 
         # Synthesis added
         assert "synthesis" in result
-        assert result["synthesis"]["executive_summary"] == "Program is on track with 2 at-risk items requiring attention."
+        assert (
+            result["synthesis"]["executive_summary"]
+            == "Program is on track with 2 at-risk items requiring attention."
+        )
         assert "generated_at" in result["synthesis"]
         assert result["synthesis"]["model"] == "claude-sonnet-4-5"
 
@@ -63,9 +68,7 @@ class TestReportSynthesizer:
         synthesizer = ReportSynthesizer(mock_provider)
         context = {
             "total_deliverables": 5,
-            "status_groups": [
-                ("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])
-            ],
+            "status_groups": [("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])],
         }
 
         result = synthesizer.synthesize(context)  # No features specified
@@ -81,9 +84,7 @@ class TestReportSynthesizer:
 
         context = {"total_deliverables": 5, "status_groups": []}
 
-        result = synthesizer.synthesize(
-            context, features={"executive_summary": False}
-        )
+        result = synthesizer.synthesize(context, features={"executive_summary": False})
 
         assert "synthesis" in result
         assert "executive_summary" not in result["synthesis"]
@@ -158,9 +159,7 @@ class TestReportSynthesizer:
         mock_provider.generate.return_value = "Test summary"
         mock_provider.model = "test"
 
-        synthesizer = ReportSynthesizer(
-            mock_provider, max_tokens=1000, temperature=0.3
-        )
+        synthesizer = ReportSynthesizer(mock_provider, max_tokens=1000, temperature=0.3)
 
         context = {
             "total_deliverables": 5,
@@ -231,10 +230,7 @@ class TestReportSynthesizer:
         assert "synthesis" in result
         assert "risk_analysis" in result["synthesis"]
         assert len(result["synthesis"]["risk_analysis"]["themes"]) == 1
-        assert (
-            result["synthesis"]["risk_analysis"]["themes"][0]["name"]
-            == "Resource Constraints"
-        )
+        assert result["synthesis"]["risk_analysis"]["themes"][0]["name"] == "Resource Constraints"
         assert len(result["synthesis"]["risk_analysis"]["critical_risks"]) == 1
 
     def test_synthesize_risk_analysis_no_risks(self):
@@ -274,9 +270,7 @@ class TestReportSynthesizer:
 
         synthesizer = ReportSynthesizer(mock_provider)
         context = {
-            "status_groups": [
-                ("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])
-            ]
+            "status_groups": [("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])]
         }
 
         # Should not raise exception
@@ -297,14 +291,10 @@ class TestReportSynthesizer:
         )
         mock_provider.model = "test"
 
-        synthesizer = ReportSynthesizer(
-            mock_provider, max_tokens=1000, temperature=0.3
-        )
+        synthesizer = ReportSynthesizer(mock_provider, max_tokens=1000, temperature=0.3)
 
         context = {
-            "status_groups": [
-                ("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])
-            ]
+            "status_groups": [("At Risk", [{"deliverable": "A", "risks_issues": "Real risk"}])]
         }
 
         synthesizer.synthesize(

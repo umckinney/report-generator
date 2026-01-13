@@ -87,8 +87,7 @@ class TestExecutiveSummaryPrompt:
     def test_parse_response_multiple_sentences(self):
         """Test sentence counting."""
         response = (
-            "Program is on track. Two items are at risk. "
-            "Immediate action needed on Feature X."
+            "Program is on track. Two items are at risk. " "Immediate action needed on Feature X."
         )
 
         result = executive_summary.parse_response(response)
