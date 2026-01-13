@@ -175,7 +175,7 @@ class KPRReportGenerator:
                         "executive_summary": True,
                         "risk_analysis": True,
                         "action_items": True,  # Phase 5 - Enable action items
-                    }
+                    },
                 )
                 print(f"✓ AI synthesis complete (tokens: {synthesizer.get_token_usage()})")
             except Exception as e:
